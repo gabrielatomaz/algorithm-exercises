@@ -7,10 +7,12 @@ int main() {
     printf("Digite um número inteiro: ");  
     scanf("%d", &number); 
   
-    if (number % 2 == 0) printf("%d é um número PAR\n", number);
-    else printf("%d é um número IMPAR\n", number);
+    if (number % 2 == 0) printf("%d é um número PAR e ", number);
+    else printf("%d é um número IMPAR e ", number);
 
-    if (number == 0) printf("Número igual a ZERO\n");
-    else if (number > 0) printf("Número POSITIVO\n");
-    else if (number < 0) printf("Número NEGATIVO\n");
+    if (number == 0) printf("igual a ZERO");
+    else if (number > 0) printf("POSITIVO");
+    else if (number < 0) printf("NEGATIVO");
+
+    return 0;
 }

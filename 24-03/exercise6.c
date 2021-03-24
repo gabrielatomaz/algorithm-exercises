@@ -52,4 +52,6 @@ int main() {
 
     printf("====================\n");
     printf("Média ponderada: %f\n", average);
+
+    return 0;
 }
