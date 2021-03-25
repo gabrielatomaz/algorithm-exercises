@@ -14,7 +14,7 @@
 
 int main() {
     int i, indexToBeRemoved;
-    float average, grades[3], largest, rest[2];
+    float average, grades[3], bestGrade, rest[2];
     char code[10], *result;
 
     printf("Digite o código do aluno: ");
@@ -25,14 +25,14 @@ int main() {
       scanf("%f", &grades[i]);
     }
 
-    largest = grades[0];
+    bestGrade = grades[0];
     for (i = 1; i < 3; i++)
-      if (largest < grades[i]) 
-        largest = grades[i];
+      if (bestGrade < grades[i]) 
+        bestGrade = grades[i];
 
     for(i = 0; i < 3; i++)
     {
-      if(grades[i] == largest)
+      if(grades[i] == bestGrade)
       {
         indexToBeRemoved = i;
         break;
@@ -45,7 +45,7 @@ int main() {
     for(i = 0; i < 2; i++)
       rest[i] = grades[i];
 
-    average = largest * .4;
+    average = bestGrade * .4;
 
     for(i = 0; i < 2; i++) average += rest[i] * .3;
 
@@ -58,7 +58,7 @@ int main() {
     printf("Aluno %s \n", result);
     
     for (i = 0; i < 3; i++)
-      printf("Nota %s: %f\n", code, grades[i]);
+      printf("Nota %d: %f\n", i, grades[i]);
 
     printf("====================\n");
     printf("Média ponderada: %f\n", average);
