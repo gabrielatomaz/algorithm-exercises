@@ -19,7 +19,7 @@ int main() {
 
 	if (number == 0) printf("igual a ZERO");
 	else if (number > 0) printf("POSITIVO");
-	else if (number < 0) printf("NEGATIVO");
+	else printf("NEGATIVO");
 
 	return 0;
 }
