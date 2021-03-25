@@ -20,7 +20,7 @@ int main() {
   scanf("%d", &swimmerAge); 
 
   if (swimmerAge < 5) {
-    printf("Crianças com menos de 5 anos não podem nadar!");
+    printf("Por favor, insira uma idade válida!");
     return 0;
   }
   else if (swimmerAge >=5 && swimmerAge <=7) category = "Infantil A";
