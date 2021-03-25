@@ -57,9 +57,8 @@ int main() {
     printf("====================\n");
     printf("Aluno %s \n", result);
     
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i++)
       printf("Nota %s: %f\n", code, grades[i]);
-    }
 
     printf("====================\n");
     printf("Média ponderada: %f\n", average);
