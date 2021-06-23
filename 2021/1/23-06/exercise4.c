@@ -20,32 +20,34 @@ typedef struct{
 
 void preencher(Dados agenda[100]) {
     for (int i = 0; i < 100; i++) {
-        Dados dado = agenda[i];
+        printf("%d - Informe o nome: ", i + 1);
+        scanf("%s", agenda[i].nome);
 
-        printf("Informe o nome: \n");
-        scanf("%s", dado.nome);
+        printf("%d - Informe o email: ", i + 1);
+        scanf("%s", agenda[i].email);
 
-        printf("Informe o dia do nascimento: \n");
-        scanf("%d", &dado.diaNasc);
+        printf("%d - Informe o dia do nascimento: ", i + 1);
+        scanf("%d", &agenda[i].diaNasc);
 
-        printf("Informe o mês do nascimento: \n");
-        scanf("%d", &dado.mesNasc);
+        printf("%d - Informe o mês do nascimento: ", i + 1);
+        scanf("%d", &agenda[i].mesNasc);
 
-        printf("Informe o ano do nascimento: \n");
-        scanf("%d", &dado.anoNasc);
+        printf("%d - Informe o ano do nascimento: ", i + 1);
+        scanf("%d", &agenda[i].anoNasc);
 
-        printf("Informe o email: \n");
-        scanf("%s", dado.email);
+        printf("\n");
     }
 }
 
 void listarPelaData(Dados agenda[100], int dia, int mes, int ano) {
+    printf("\nLista de pessoas que nasceram em %d/%d/%d\n", dia, mes, ano);
     for (int i = 0; i < 100; i++) {
-        Dados dado = agenda[i];
-        if (dado.diaNasc == dia && dado.mesNasc == mes && dado.anoNasc == ano) {
-            printf("Nome: %s\n", dado.nome);
-            printf("Email: %s\n", dado.email);
+        if (agenda[i].diaNasc == dia && agenda[i].mesNasc == mes && agenda[i].anoNasc == ano) {
+            printf("%d - Nome: %s\n", i + 1, agenda[i].nome);
+            printf("%d - Email: %s\n", i + 1, agenda[i].email);
         }
+
+        printf("\n");
     }
 }
 
