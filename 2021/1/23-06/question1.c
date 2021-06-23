@@ -18,7 +18,7 @@
 
 #define SIZE 1000
 
-void printBiggestValue(int array[]) {
+void printBiggestValueAndIndex(int array[]) {
     int biggestValue = array[0];
     int indexOfBiggestValue = 0;
     for (int i = 1; i < SIZE; i++) {
@@ -86,7 +86,7 @@ int main() {
 
         switch (menu) {
             case 1:
-                printBiggestValue(array);
+                printBiggestValueAndIndex(array);
                 
                 break;
             case 2:
