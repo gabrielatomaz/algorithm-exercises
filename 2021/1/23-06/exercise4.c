@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
     Gabriela Tomaz do Amaral Ribeiro - 20200543
@@ -8,9 +10,6 @@
         na data informada no programa principal.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct{
     char nome[200];
     int diaNasc; //dia nascimento
@@ -19,40 +18,43 @@ typedef struct{
     char email[100];
 } Dados;
 
-void preencher(Dados agenda[]) {
-    for (int i = 0; i < 2; i++) {
+void preencher(Dados agenda[100]) {
+    for (int i = 0; i < 100; i++) {
+        Dados dado = agenda[i];
+
         printf("Informe o nome: \n");
-        scanf("%s", agenda[i].nome);
+        scanf("%s", dado.nome);
 
         printf("Informe o dia do nascimento: \n");
-        scanf("%d", &agenda[i].diaNasc);
+        scanf("%d", &dado.diaNasc);
 
         printf("Informe o mês do nascimento: \n");
-        scanf("%d", &agenda[i].mesNasc);
+        scanf("%d", &dado.mesNasc);
 
         printf("Informe o ano do nascimento: \n");
-        scanf("%d", &agenda[i].anoNasc);
+        scanf("%d", &dado.anoNasc);
 
         printf("Informe o email: \n");
-        scanf("%s", agenda[i].email);
+        scanf("%s", dado.email);
     }
 }
 
-void listarPelaData(Dados agenda[], int dia, int mes, int ano) {
-    for (int i = 0; i < 2; i++) {
-        if (agenda[i].diaNasc == dia && agenda[i].mesNasc == mes && agenda[i].anoNasc == ano) {
-            printf("Nome: %s\n", agenda[i].nome);
-            printf("Email: %s\n", agenda[i].email);
+void listarPelaData(Dados agenda[100], int dia, int mes, int ano) {
+    for (int i = 0; i < 100; i++) {
+        Dados dado = agenda[i];
+        if (dado.diaNasc == dia && dado.mesNasc == mes && dado.anoNasc == ano) {
+            printf("Nome: %s\n", dado.nome);
+            printf("Email: %s\n", dado.email);
         }
     }
 }
 
 int main() {
-    Dados agenda[2];
+    Dados agenda[100];
     int dia, mes, ano;
 
     preencher(agenda);
-    
+
     printf("Informe uma data.\nDigite o dia:");
     scanf("%d", &dia);
 

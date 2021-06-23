@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 /*  
     Gabriela Tomaz do Amaral Ribeiro - 20200543
@@ -18,9 +19,10 @@
 
 #define SIZE 1000
 
-void printBiggestValueAndIndex(int array[]) {
+void printBiggestValueAndIndex(int array[SIZE]) {
     int biggestValue = array[0];
     int indexOfBiggestValue = 0;
+    
     for (int i = 1; i < SIZE; i++) {
         if (biggestValue < array[i]) {
             biggestValue = array[i];    
@@ -32,7 +34,7 @@ void printBiggestValueAndIndex(int array[]) {
     printf("Posição no vetor: %d\n", indexOfBiggestValue);
 }
 
-void printEvenNumbers(int array[]) {
+void printEvenNumbers(int array[SIZE]) {
     int hasEvenNumber = 0;
 
     for (int i = 0; i < SIZE; i++) {
@@ -48,7 +50,7 @@ void printEvenNumbers(int array[]) {
     }
 }
 
-int* reverseArray(int array[]) {
+int* reverseArray(int array[SIZE]) {
     for (int low = 0, high = SIZE - 1; low < high; low++, high--) {
         int temp = array[low];
         array[low] = array[high];
@@ -60,7 +62,7 @@ int* reverseArray(int array[]) {
     return array;
 }
 
-void printArray(int array[]) { 
+void printArray(int array[SIZE]) { 
     printf("Valores do vetor: \n");
 
     for (int i = 0; i < SIZE; i++) {
@@ -71,6 +73,8 @@ void printArray(int array[]) {
 int main() {
     int *array,
         menu = 0;
+
+    srand(time(NULL));
 
     for (int i = 0; i < SIZE; i++) {
         array[i] = rand() % 3001;
@@ -99,6 +103,7 @@ int main() {
                 break; 
             case 4:
                 printArray(array);
+                
                 break;
             case 5: 
                 break;
