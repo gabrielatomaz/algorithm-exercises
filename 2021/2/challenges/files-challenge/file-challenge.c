@@ -13,8 +13,8 @@ typedef enum { false = 0, true = !false } bool;
 int main() {
     FILE *file;
     char *line = (char*) malloc(LINE_SIZE), 
-        *newLine;
-    char fileName[FILE_NAME_SIZE] = FIRST_TXT;
+        *newLine,
+        fileName[FILE_NAME_SIZE] = FIRST_TXT;
     bool search = true;
 
     while (search) {
