@@ -6,6 +6,7 @@
 #define LINE_SIZE 100
 #define FILE_NAME_SIZE 100
 #define FIRST_TXT "90052.txt"
+#define NEXT_TEXT "Next nothing is"
 
 typedef enum { false = 0, true = !false } bool;
 
@@ -13,7 +14,7 @@ int main() {
     FILE *file;
     char *line = (char*) malloc(LINE_SIZE), 
         *newLine;
-    char fileName[FILE_NAME_SIZE] = "90052.txt";
+    char fileName[FILE_NAME_SIZE] = FIRST_TXT;
     bool search = true;
 
     while (search) {
@@ -26,7 +27,7 @@ int main() {
             else newLine++;
         }
 
-        if (strstr(line, "Next nothing is") == NULL) search = false;
+        if (strstr(line, NEXT_TEXT) == NULL) search = false;
     }
 
     printf("Arquivo: %s\n%s\n", fileName, line);
