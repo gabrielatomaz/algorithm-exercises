@@ -18,16 +18,15 @@ int main() {
     bool search = true;
 
     while (search) {
-        if ((file = fopen(fileName, "r")) == NULL) exit(1);
-
-        while (fgets(line, LINE_SIZE, file) != NULL) newLine = line;
+        file = fopen(fileName, "r");
+        newLine = fgets(line, LINE_SIZE, file);
 
         while (*newLine) {
             if (isdigit(*newLine)) sprintf(fileName, "%ld.txt", strtol(newLine, &newLine, 10));
             else newLine++;
         }
 
-        if (strstr(line, NEXT_TEXT) == NULL) search = false;
+        search = strstr(line, NEXT_TEXT) != NULL;
     }
 
     printf("Arquivo: %s\n%s\n", fileName, line);
