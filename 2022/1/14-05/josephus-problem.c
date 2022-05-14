@@ -14,13 +14,12 @@ int main()
     Soldier *soldier5 = createSoldier(5, "nome5");
     Soldier *soldier6 = createSoldier(6, "nome6");
 
-    list = insertAtStart(list, *soldier1); // 4 5 3 1 6
+    list = insertAtStart(list, *soldier1);
     list = insertAtStart(list, *soldier3);
     list = insertAtStart(list, *soldier4);
-    list = insertAtEnd(list, *soldier6);
-    list = insertAt(list, *soldier5, 2);
-    list = removeAt(list, 1);
-    
+    list = insertAtStart(list, *soldier6);
+    list = insertAtStart(list, *soldier2);
+    list = removeEvenValues(list);
 
     int id = findBiggest(list).id;
 
@@ -143,11 +142,7 @@ Node *removeAt(Node *list, int position)
         return list;
 
     if (listSize == 1)
-    {
-        free(current);
-
         close(list);
-    }
 
     current = list->next;
     for (int i = 1; i < position; i++)
@@ -157,11 +152,6 @@ Node *removeAt(Node *list, int position)
     }
 
     previous->next = current->next;
-
-    if (current == list)
-        list = previous;
-
-    free(current);
 
     return list;
 }
@@ -182,16 +172,19 @@ Node *removeStart(Node *list)
 
 Node *removeEvenValues(Node *list)
 {
-    Node *current,
-        *previous = list;
+    Node *current = list,
+         *auxiliaryNode;
     int listSize = size(list);
 
-    current = list->next;
-
-
-    previous->next = current->next;
-
-    free(current);
+    for (int i = 0; i < listSize; i++)
+    {
+        if (current->content.id % 2 == 0)
+        {
+            auxiliaryNode = list->next;
+            list->next = auxiliaryNode->next;
+        }
+        current = current->next;
+    }
 
     return list;
 }
@@ -199,7 +192,7 @@ Node *removeEvenValues(Node *list)
 Node *close(Node *list)
 {
     list = NULL;
-    
+
     return list;
 }
 
