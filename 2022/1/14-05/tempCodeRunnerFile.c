@@ -1,1 +1,1 @@
-    list = removeAt(list, 2);
+1

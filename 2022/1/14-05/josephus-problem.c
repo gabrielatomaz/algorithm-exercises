@@ -14,9 +14,13 @@ int main()
     Soldier *soldier5 = createSoldier(5, "nome5");
     Soldier *soldier6 = createSoldier(6, "nome6");
 
-    list = insertAtStart(list, *soldier1);
+    list = insertAtStart(list, *soldier1); // 4 5 3 1 6
     list = insertAtStart(list, *soldier3);
     list = insertAtStart(list, *soldier4);
+    list = insertAtEnd(list, *soldier6);
+    list = insertAt(list, *soldier5, 2);
+    list = removeAt(list, 1);
+    
 
     int id = findBiggest(list).id;
 
@@ -201,7 +205,7 @@ Node *close(Node *list)
 
 int isPositionValid(int position, int size)
 {
-    int isValid = position > 1 && position <= size + 1;
+    int isValid = position >= 1 && position <= size + 1;
     if (isValid)
         return 1;
 
