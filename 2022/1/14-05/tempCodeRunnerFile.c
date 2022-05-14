@@ -1,0 +1,1 @@
+    list = removeAt(list, 2);
