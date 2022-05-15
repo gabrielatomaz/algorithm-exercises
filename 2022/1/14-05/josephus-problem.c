@@ -19,24 +19,24 @@ int main()
     list = insertAtEnd(list, *soldier2);
     list = insertAtEnd(list, *soldier3);
     list = insertAtStart(list, *soldier6);
-    list = insertAtEnd(list, *soldier4);
+    list = insertAt(list, *soldier4, 5);
     list = insertAtStart(list, *soldier5);
 
-    // list = orderBySelectionSort(list);
+    // orderBySelectionSort(list);
 
     // list = removeEvenValues(list);
     // list = removeAt(list, 2);
     // list = removeBy(list, *soldier2);
     // list = removeStart(list);
 
-    // finishList(list);
+    finishList(list);
 
-    // Soldier soldier = findBiggestSoldier(list);
+    // Soldier soldier = findBiggestSoldierId(list);
     // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
 
-    // printf("Quantidade de soldados: %d\n", size(list));
+    printf("Quantidade de soldados: %d\n", size(list));
 
-    // printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
+    printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
 
     // Node *lastNode = findLast(list);
     // Node *firstNode = lastNode->next;
@@ -76,18 +76,17 @@ void print(Node *list)
 
 int size(Node *list)
 {
-    Node *current = list;
-    int size = 1;
+    int size = 0;
 
     if (list == NULL)
         return 0;
 
-    current = current->next;
-    while (current != list)
+    Node *current = list->next;
+    do
     {
         size++;
         current = current->next;
-    }
+    } while (current != list->next);
 
     return size;
 }
@@ -263,7 +262,7 @@ Node *removeBy(Node *list, Soldier soldier)
     return list;
 }
 
-void *finishList(Node *list)
+void finishList(Node *list)
 {
     Node *current = list->next;
     do
@@ -293,10 +292,14 @@ Soldier findBiggestSoldierId(Node *list)
     for (int i = 1; i < listSize; i++)
     {
         if (current->content.id > result.id)
+        {
             result = current->content;
+        }
 
         current = current->next;
     }
+
+    list = removeBy(list, result);
 
     return result;
 }
@@ -320,55 +323,63 @@ Soldier *createSoldier(int id, char name[30])
 Node *partition(Node *first, Node *last)
 {
     Node *pivot = first;
-	Node *front = first;
-	Soldier temp;
-	while (front != NULL && front != last)
-	{
-		if (front->content.id < last->content.id)
-		{
-			pivot = first;
-			//Swap node value
-			temp = first->content;
-			first->content = front->content;
-			front->content = temp;
-			//Visit to next node
-			first = first->next;
-		}
-		//Visit to next node
-		front = front->next;
-	}
-	//Change last node value to current node
-	temp = first->content;
-	first->content = last->content;
-	last->content = temp;
+    Node *front = first;
+    Soldier temp;
+    while (front != NULL && front != last)
+    {
+        if (front->content.id < last->content.id)
+        {
+            pivot = first;
+            // Swap node value
+            temp = first->content;
+            first->content = front->content;
+            front->content = temp;
+            // Visit to next node
+            first = first->next;
+        }
+        // Visit to next node
+        front = front->next;
+    }
+    // Change last node value to current node
+    temp = first->content;
+    first->content = last->content;
+    last->content = temp;
 
-	return pivot;
+    return pivot;
 }
 
 void orderByQuickSort(Node *first, Node *last)
 {
-    if (first == last)
-	{
-		return;
-	}
+    clock_t begin = clock();
 
-	Node *pivot = partition(first, last);
-	if (pivot != NULL && pivot->next != NULL)
-	{
-		orderByQuickSort(pivot->next, last);
-	}
-	if (pivot != NULL && first != pivot)
-	{
-		orderByQuickSort(first, pivot);
-	}
+    if (first == last)
+    {
+        return;
+    }
+
+    Node *pivot = partition(first, last);
+    if (pivot != NULL && pivot->next != NULL)
+    {
+        orderByQuickSort(pivot->next, last);
+    }
+    if (pivot != NULL && first != pivot)
+    {
+        orderByQuickSort(first, pivot);
+    }
+
+    clock_t end = clock();
+
+    timeSpent(begin, end);
 }
 
-Node *orderBySelectionSort(Node *list)
+void orderBySelectionSort(Node *list)
 {
     Node *i,
         *j;
     i = list;
     Soldier soldier;
+
+    clock_t begin = clock();
 
     do
     {
@@ -389,5 +400,14 @@ Node *orderBySelectionSort(Node *list)
         i = i->next;
     } while (i->next != list);
 
-    return list;
+    clock_t end = clock();
+    
+    timeSpent(begin, end);
+}
+
+void timeSpent(double begin, double end)
+{
+    double timeSpent = (double)(end - begin);
+
+    printf("Tempo gasto: %f", timeSpent);
 }
