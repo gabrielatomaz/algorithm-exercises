@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "josephus-problem-lib.h"
 
 int main()
@@ -14,7 +15,7 @@ int main()
     Soldier *soldier5 = createSoldier(5, "nome5");
     Soldier *soldier6 = createSoldier(6, "nome6");
 
-    list = create(*soldier1); // 5, 6, 2, 1, 3, 4
+    list = create(*soldier1);
     list = insertAtEnd(list, *soldier2);
     list = insertAtEnd(list, *soldier3);
     list = insertAtStart(list, *soldier6);
@@ -28,7 +29,7 @@ int main()
     // list = removeBy(list, *soldier2);
     // list = removeStart(list);
 
-    // deleteAll(list);
+    // finishList(list);
 
     // Soldier soldier = findBiggestSoldier(list);
     // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
@@ -36,6 +37,10 @@ int main()
     // printf("Quantidade de soldados: %d\n", size(list));
 
     // printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
+
+    // Node *lastNode = findLast(list);
+    // Node *firstNode = lastNode->next;
+    // orderByQuickSort(firstNode, lastNode);
 
     print(list);
 
@@ -169,6 +174,26 @@ Node *removeAt(Node *list, int position)
     return list;
 }
 
+Node *findLast(Node *list)
+{
+    Node *current,
+        *previous = list;
+    int listSize = size(list);
+
+    if (listSize == 1)
+        return list;
+
+    current = list->next;
+    for (int i = 1; i < listSize; i++)
+    {
+        current = current->next;
+    }
+
+    list = current;
+
+    return list;
+}
+
 Node *removeStart(Node *list)
 {
     Node *auxiliaryNode;
@@ -292,6 +317,52 @@ Soldier *createSoldier(int id, char name[30])
     return soldier;
 }
 
+Node *partition(Node *first, Node *last)
+{
+    Node *pivot = first;
+	Node *front = first;
+	Soldier temp;
+	while (front != NULL && front != last)
+	{
+		if (front->content.id < last->content.id)
+		{
+			pivot = first;
+			//Swap node value
+			temp = first->content;
+			first->content = front->content;
+			front->content = temp;
+			//Visit to next node
+			first = first->next;
+		}
+		//Visit to next node
+		front = front->next;
+	}
+	//Change last node value to current node
+	temp = first->content;
+	first->content = last->content;
+	last->content = temp;
+
+	return pivot;
+}
+
+void orderByQuickSort(Node *first, Node *last)
+{
+    if (first == last)
+	{
+		return;
+	}
+
+	Node *pivot = partition(first, last);
+	if (pivot != NULL && pivot->next != NULL)
+	{
+		orderByQuickSort(pivot->next, last);
+	}
+	if (pivot != NULL && first != pivot)
+	{
+		orderByQuickSort(first, pivot);
+	}
+}
+
 Node *orderBySelectionSort(Node *list)
 {
     Node *i,
@@ -311,7 +382,7 @@ Node *orderBySelectionSort(Node *list)
                 i->content = j->content;
                 j->content = soldier;
             }
-            
+
             j = j->next;
         } while (j != list->next);
 
