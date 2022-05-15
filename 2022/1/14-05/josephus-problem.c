@@ -15,18 +15,20 @@ int main()
     Soldier *soldier6 = createSoldier(6, "nome6");
 
     list = create(*soldier1); // 5, 6, 2, 1, 3, 4
-    list = insertAtStart(list, *soldier2);
+    list = insertAtEnd(list, *soldier2);
     list = insertAtEnd(list, *soldier3);
     list = insertAtStart(list, *soldier6);
     list = insertAtEnd(list, *soldier4);
     list = insertAtStart(list, *soldier5);
+
+    // list = orderBySelectionSort(list);
 
     // list = removeEvenValues(list);
     // list = removeAt(list, 2);
     // list = removeBy(list, *soldier2);
     // list = removeStart(list);
 
-    // list = close(list);
+    // deleteAll(list);
 
     // Soldier soldier = findBiggestSoldier(list);
     // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
@@ -51,7 +53,8 @@ Node *create(Soldier soldier)
 
 void print(Node *list)
 {
-    if (list == NULL) {
+    if (list == NULL)
+    {
         printf("Não há nenhum soldado na lista.\n");
         return;
     }
@@ -182,8 +185,8 @@ Node *removeStart(Node *list)
 
 Node *removeEvenValues(Node *list)
 {
-    Node *current = list->next,
-         *previous;
+    Node *current = list->next;
+
     do
     {
         if (current->content.id % 2 == 0)
@@ -191,9 +194,8 @@ Node *removeEvenValues(Node *list)
             list = removeBy(list, current->content);
             current = list->next;
         }
-     
-        current = current->next;
 
+        current = current->next;
     } while (current != list->next);
 
     return list;
@@ -236,14 +238,15 @@ Node *removeBy(Node *list, Soldier soldier)
     return list;
 }
 
-Node *close(Node *list)
+void *finishList(Node *list)
 {
-    while (!isEmpty(list))
+    Node *current = list->next;
+    do
     {
-        list = removeStart(list);
-    }
-
-    return list;
+        list = removeBy(list, current->content);
+        current = list->next;
+        current = current->next;
+    } while (current != list->next);
 }
 
 int isPositionValid(int position, int size)
@@ -256,7 +259,7 @@ int isPositionValid(int position, int size)
     return 0;
 }
 
-Soldier findBiggestSoldier(Node *list)
+Soldier findBiggestSoldierId(Node *list)
 {
     Soldier result = list->content;
     Node *current = list;
@@ -287,4 +290,33 @@ Soldier *createSoldier(int id, char name[30])
     strcpy(soldier->name, name);
 
     return soldier;
+}
+
+Node *orderBySelectionSort(Node *list)
+{
+    Node *i,
+        *j;
+    i = list;
+    Soldier soldier;
+
+    do
+    {
+        j = i->next;
+
+        do
+        {
+            if (i->content.id >= j->content.id)
+            {
+                soldier = i->content;
+                i->content = j->content;
+                j->content = soldier;
+            }
+            
+            j = j->next;
+        } while (j != list->next);
+
+        i = i->next;
+    } while (i->next != list);
+
+    return list;
 }
