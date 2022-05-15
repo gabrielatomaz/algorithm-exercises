@@ -14,49 +14,56 @@ int main()
     Soldier *soldier5 = createSoldier(5, "nome5");
     Soldier *soldier6 = createSoldier(6, "nome6");
 
-    list = insertAtStart(list, *soldier1);
-    list = insertAtStart(list, *soldier3);
-    list = insertAtStart(list, *soldier4);
-    list = insertAtStart(list, *soldier6);
+    list = create(*soldier1); // 5, 6, 2, 1, 3, 4
     list = insertAtStart(list, *soldier2);
-    list = removeEvenValues(list);
+    list = insertAtEnd(list, *soldier3);
+    list = insertAtStart(list, *soldier6);
+    list = insertAtEnd(list, *soldier4);
+    list = insertAtStart(list, *soldier5);
 
-    int id = findBiggest(list).id;
+    // list = removeEvenValues(list);
+    // list = removeAt(list, 2);
+    // list = removeBy(list, *soldier2);
+    // list = removeStart(list);
 
-    printf("%d - SOLDADO\n", id);
+    // list = close(list);
+
+    // Soldier soldier = findBiggestSoldier(list);
+    // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
+
+    // printf("Quantidade de soldados: %d\n", size(list));
+
+    // printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
+
     print(list);
-    int s = size(list);
-    int empty = isEmpty(list);
-    printf("size: %d\n", s);
-    printf("isEmpty: %s", empty ? "true" : "false");
 
     return 0;
 }
 
 Node *create(Soldier soldier)
 {
-    Node *newNode = (Node *)malloc(sizeof(Node));
+    Node *newNode = malloc(sizeof(Node));
     newNode->content = soldier;
+    newNode->next = newNode;
 
     return newNode;
 }
 
 void print(Node *list)
 {
-    Node *current = list;
-    int listSize = size(list);
-
-    if (list != NULL)
-    {
-        do
-        {
-            current = current->next;
-            Soldier content = current->content;
-            printf("Soldado %d: %s\n",
-                   content.id,
-                   content.name);
-        } while (current != list);
+    if (list == NULL) {
+        printf("Não há nenhum soldado na lista.\n");
+        return;
     }
+    Node *current = list->next;
+    do
+    {
+        Soldier content = current->content;
+        printf("[Soldado %d: %s] -> ",
+               content.id,
+               content.name);
+        current = current->next;
+    } while (current != list->next);
 }
 
 int size(Node *list)
@@ -79,16 +86,9 @@ int size(Node *list)
 
 Node *insertAtStart(Node *list, Soldier soldier)
 {
-    Node *newNode = create(soldier);
+    Node *newNode = malloc(sizeof(Node));
 
-    if (list == NULL)
-    {
-        list = newNode;
-        newNode->next = newNode;
-
-        return list;
-    }
-
+    newNode->content = soldier;
     newNode->next = list->next;
     list->next = newNode;
 
@@ -97,9 +97,16 @@ Node *insertAtStart(Node *list, Soldier soldier)
 
 Node *insertAtEnd(Node *list, Soldier soldier)
 {
-    Node *newNode = insertAtStart(list, soldier);
+    Node *newNode = malloc(sizeof(Node));
 
-    return newNode->next;
+    newNode->content = soldier;
+    newNode->next = NULL;
+
+    newNode->next = list->next;
+    list->next = newNode;
+    list = list->next;
+
+    return list;
 }
 
 Node *insertAt(Node *list, Soldier soldier, int position)
@@ -129,7 +136,7 @@ Node *insertAt(Node *list, Soldier soldier, int position)
 
 int isEmpty(Node *list)
 {
-    return list == NULL;
+    return size(list) == 0;
 }
 
 Node *removeAt(Node *list, int position)
@@ -142,7 +149,10 @@ Node *removeAt(Node *list, int position)
         return list;
 
     if (listSize == 1)
-        close(list);
+    {
+        list = NULL;
+        free(current);
+    }
 
     current = list->next;
     for (int i = 1; i < position; i++)
@@ -172,26 +182,66 @@ Node *removeStart(Node *list)
 
 Node *removeEvenValues(Node *list)
 {
-    Node *current = list,
-         *auxiliaryNode;
-    int listSize = size(list);
-
-    for (int i = 0; i < listSize; i++)
+    Node *current = list->next,
+         *previous;
+    do
     {
         if (current->content.id % 2 == 0)
         {
-            auxiliaryNode = list->next;
-            list->next = auxiliaryNode->next;
+            list = removeBy(list, current->content);
+            current = list->next;
         }
+     
         current = current->next;
+
+    } while (current != list->next);
+
+    return list;
+}
+
+Node *removeBy(Node *list, Soldier soldier)
+{
+    Node *current = list, *previous;
+
+    if (list == NULL)
+        return list;
+
+    if (list == list->next)
+    {
+        if (list->content.id == soldier.id)
+        {
+            list = NULL;
+            free(current);
+        }
+
+        return list;
     }
+
+    do
+    {
+        previous = current;
+        current = current->next;
+        if (current->content.id == soldier.id)
+        {
+            previous->next = current->next;
+
+            if (current == list)
+                list = previous;
+
+            free(current);
+            current = previous->next;
+        }
+    } while (current != list);
 
     return list;
 }
 
 Node *close(Node *list)
 {
-    list = NULL;
+    while (!isEmpty(list))
+    {
+        list = removeStart(list);
+    }
 
     return list;
 }
@@ -206,7 +256,7 @@ int isPositionValid(int position, int size)
     return 0;
 }
 
-Soldier findBiggest(Node *list)
+Soldier findBiggestSoldier(Node *list)
 {
     Soldier result = list->content;
     Node *current = list;
