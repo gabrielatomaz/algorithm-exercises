@@ -42,3 +42,4 @@ int isEmpty(Node *list);
 int size(Node *list);
 void timeSpent(double begin, double end);
 int randomNumber(int totalSoldiers);
+void stab(Node *soldiers, int toBeStabbed, int position);

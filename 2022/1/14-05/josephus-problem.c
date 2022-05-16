@@ -32,29 +32,16 @@ int main()
 		soldiers = insertAtEnd(soldiers, *soldier);
 	}
 
-	// int stabNumber = randomNumber(totalSoldiers);
-	int stabNumber = 2, counter = 0;
+	int stabNumber = randomNumber(totalSoldiers),
+		position = 0;
 
 	printf("\nNúmero aleatório gerado: %d\n", stabNumber);
+	stabNumber--;
 
 	printf("\nSituação atual da lista: \n");
 	printList(soldiers);
 
-	while (size(soldiers) != 1)
-	{
-		if (stabNumber == 0)
-			soldiers = removeStart(soldiers);
-
-		soldiers = removeAt(soldiers, stabNumber + counter);
-
-		counter++;
-
-		printf("\nSituação atual da lista: \n");
-		printList(soldiers);
-	}
-
-	printf("\nO soldado salvo foi:\n");
-	printList(soldiers);
+	stab(soldiers, stabNumber, position);
 
 	printf("\n------------------------Problema de Josephus------------------------\n");
 
@@ -117,20 +104,16 @@ void printList(Node *list)
 		printf("Não há nenhum soldado na lista.\n");
 		return;
 	}
+
 	Node *current = list->next;
 	do
 	{
 		Soldier content = current->content;
 
-		printf("[Soldado %d: %s]",
+		printf("[Soldado %d: %s]  -> ",
 			   content.id,
 			   content.name);
 
-		if (size(list) != 1)
-			printf(" -> ",
-				   content.id,
-				   content.name);
-				   
 		current = current->next;
 	} while (current != list->next);
 
@@ -506,6 +489,26 @@ int randomNumber(int totalSoldiers)
 	srand(time(NULL));
 
 	return rand() % ((totalSoldiers * 2) + 1);
+}
+
+void stab(Node *soldiers, int toBeStabbed, int position)
+{
+	if (size(soldiers) == 1)
+	{
+		printf("\nO soldado salvo é: %d - %s\n",
+			   soldiers->content.id,
+			   soldiers->content.name);
+		return;
+	}
+
+	position = (position + toBeStabbed) % size(soldiers);
+
+	soldiers = removeAt(soldiers, toBeStabbed >= 1 ? 1 + position : toBeStabbed);
+
+	printf("\nSituação atual da lista: \n");
+	printList(soldiers);
+
+	stab(soldiers, toBeStabbed, position);
 }
 
 void timeSpent(double begin, double end)
