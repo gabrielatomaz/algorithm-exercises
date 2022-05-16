@@ -18,7 +18,7 @@ Soldier *createSoldier(int id, char name[30]);
 Soldier findBiggestSoldierId(Node *list);
 
 Node *createList(Soldier soldier);
-void destroyList(Node *list);
+Node *destroyList(Node *list);
 void printList(Node *list);
 
 Node *insertAtStart(Node *list, Soldier soldier);
@@ -32,7 +32,8 @@ Node *removeEvenValues(Node *list);
 
 void orderBySelectionSort(Node *list);
 
-void orderByQuickSort(Node *first, Node *last);
+void orderByQuickSort(Node *list);
+void orderByQuickSortRecursive(Node *first, Node *last);
 Node *partition(Node *first, Node *last);
 Node *findLast(Node *list);
 

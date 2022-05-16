@@ -27,22 +27,20 @@ int main()
     // orderBySelectionSort(list);
 
     // list = removeEvenValues(list);
-    // list = removeAt(list, 1);
+    // list = removeAt(list, 2);
     // list = removeBy(list, *soldier2);
     // list = removeStart(list);
 
-    destroyList(list);
+    list = destroyList(list);
 
     // Soldier soldier = findBiggestSoldierId(list);
     // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
 
-    printf("Quantidade de soldados: %d\n", size(list));
+    // printf("Quantidade de soldados: %d\n", size(list));
 
-    printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
+    // printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
 
-    // Node *lastNode = findLast(list);
-    // Node *firstNode = lastNode->next;
-    // orderByQuickSort(firstNode, lastNode);
+    // orderByQuickSort(list);
 
     printList(list);
 
@@ -150,26 +148,32 @@ int isEmpty(Node *list)
 
 Node *removeAt(Node *list, int position)
 {
-    Node *current,
-        *previous = list;
-    int listSize = size(list);
+    Node *current, *previous = list;
+    int sizeList = size(list), i;
 
-    if (!isPositionValid(position, listSize))
+    if (!isPositionValid(position, sizeList))
         return list;
 
-    if (listSize == 1)
+    if (sizeList == 1)
     {
-        return removeStart(list);
+        list = NULL;
+
+        return list;
     }
 
     current = list->next;
-    for (int i = 1; i < position; i++)
+    for (i = 1; i < position; i++)
     {
         previous = current;
         current = current->next;
     }
 
     previous->next = current->next;
+
+    if (current == list)
+        list = previous;
+
+    free(current);
 
     return list;
 }
@@ -271,21 +275,18 @@ Node *removeBy(Node *list, Soldier soldier)
     return list;
 }
 
-void destroyList(Node *list)
+Node *destroyList(Node *list)
 {
     int listSize = size(list);
-    do {
+    do
+    {
         list = removeAt(list, listSize);
+
         listSize--;
+
     } while (listSize >= 1);
-        
-    // Node *current = list->next;
-    // do
-    // {
-    //     list = removeStart(list);
-    //     current = list->next;
-    //     current = current->next;
-    // } while (current != list->next);
+
+    return list;
 }
 
 int isPositionValid(int position, int size)
@@ -363,10 +364,22 @@ Node *partition(Node *first, Node *last)
     return pivot;
 }
 
-void orderByQuickSort(Node *first, Node *last)
+void orderByQuickSort(Node *list)
 {
     clock_t begin = clock();
 
+    Node *lastNode = findLast(list);
+    Node *firstNode = lastNode->next;
+
+    orderByQuickSortRecursive(firstNode, lastNode);
+
+    clock_t end = clock();
+
+    timeSpent(begin, end);
+}
+
+void orderByQuickSortRecursive(Node *first, Node *last)
+{
     if (first == last)
     {
         return;
@@ -375,16 +388,12 @@ void orderByQuickSort(Node *first, Node *last)
     Node *pivot = partition(first, last);
     if (pivot != NULL && pivot->next != NULL)
     {
-        orderByQuickSort(pivot->next, last);
+        orderByQuickSortRecursive(pivot->next, last);
     }
     if (pivot != NULL && first != pivot)
     {
-        orderByQuickSort(first, pivot);
+        orderByQuickSortRecursive(first, pivot);
     }
-
-    clock_t end = clock();
-
-    timeSpent(begin, end);
 }
 
 void orderBySelectionSort(Node *list)
@@ -424,5 +433,5 @@ void timeSpent(double begin, double end)
 {
     double timeSpent = (double)(end - begin);
 
-    printf("Tempo gasto: %f", timeSpent);
+    printf("Tempo gasto: %f\n", timeSpent);
 }

@@ -1,1 +1,0 @@
-listSize = size(list);
