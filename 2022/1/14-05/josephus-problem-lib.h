@@ -41,3 +41,4 @@ int isPositionValid(int position, int size);
 int isEmpty(Node *list);
 int size(Node *list);
 void timeSpent(double begin, double end);
+int randomNumber(int totalSoldiers);
