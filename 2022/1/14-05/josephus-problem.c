@@ -32,7 +32,6 @@ int main()
     // list = removeStart(list);
 
     destroyList(list);
-    list = removeAt(list, 1);
 
     // Soldier soldier = findBiggestSoldierId(list);
     // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
@@ -209,11 +208,11 @@ Node *removeStart(Node *list)
     }
 
     Node *temporaryNode = list->next;
-    
+
     list->next = temporaryNode->next;
     free(temporaryNode);
     temporaryNode = NULL;
-    
+
     return list;
 }
 
@@ -274,13 +273,19 @@ Node *removeBy(Node *list, Soldier soldier)
 
 void destroyList(Node *list)
 {
-    Node *current = list->next;
-    do
-    {
-        list = removeStart(list);
-        current = list->next;
-        current = current->next;
-    } while (current != list->next);
+    int listSize = size(list);
+    do {
+        list = removeAt(list, listSize);
+        listSize--;
+    } while (listSize >= 1);
+        
+    // Node *current = list->next;
+    // do
+    // {
+    //     list = removeStart(list);
+    //     current = list->next;
+    //     current = current->next;
+    // } while (current != list->next);
 }
 
 int isPositionValid(int position, int size)
