@@ -34,8 +34,12 @@ int main()
 
 	// int stabNumber = randomNumber(totalSoldiers);
 	int stabNumber = 2, counter = 0;
+
+	printf("\nNúmero aleatório gerado: %d\n", stabNumber);
+
 	printf("\nSituação atual da lista: \n");
 	printList(soldiers);
+
 	while (size(soldiers) != 1)
 	{
 		if (stabNumber == 0)
@@ -49,8 +53,7 @@ int main()
 		printList(soldiers);
 	}
 
-	printf("\nNúmero aleatório gerado: %d\n", stabNumber);
-
+	printf("\nO soldado salvo foi:\n");
 	printList(soldiers);
 
 	printf("\n------------------------Problema de Josephus------------------------\n");
@@ -118,9 +121,16 @@ void printList(Node *list)
 	do
 	{
 		Soldier content = current->content;
-		printf("[Soldado %d: %s] -> ",
+
+		printf("[Soldado %d: %s]",
 			   content.id,
 			   content.name);
+
+		if (size(list) != 1)
+			printf(" -> ",
+				   content.id,
+				   content.name);
+				   
 		current = current->next;
 	} while (current != list->next);
 
