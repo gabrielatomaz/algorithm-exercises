@@ -14,22 +14,25 @@ int main()
     Soldier *soldier4 = createSoldier(4, "nome4");
     Soldier *soldier5 = createSoldier(5, "nome5");
     Soldier *soldier6 = createSoldier(6, "nome6");
+    Soldier *soldier7 = createSoldier(7, "nome7");
 
-    list = create(*soldier1);
+    list = createList(*soldier1);
     list = insertAtEnd(list, *soldier2);
     list = insertAtEnd(list, *soldier3);
     list = insertAtStart(list, *soldier6);
     list = insertAt(list, *soldier4, 5);
-    list = insertAtStart(list, *soldier5);
+    list = insertAtStart(list, *soldier7);
+    list = insertAtEnd(list, *soldier5);
 
     // orderBySelectionSort(list);
 
     // list = removeEvenValues(list);
-    // list = removeAt(list, 2);
+    // list = removeAt(list, 1);
     // list = removeBy(list, *soldier2);
     // list = removeStart(list);
 
-    finishList(list);
+    destroyList(list);
+    list = removeAt(list, 1);
 
     // Soldier soldier = findBiggestSoldierId(list);
     // printf("Soldado com Id mais alto: %d - %s\n ", soldier.id, soldier.name);
@@ -42,12 +45,12 @@ int main()
     // Node *firstNode = lastNode->next;
     // orderByQuickSort(firstNode, lastNode);
 
-    print(list);
+    printList(list);
 
     return 0;
 }
 
-Node *create(Soldier soldier)
+Node *createList(Soldier soldier)
 {
     Node *newNode = malloc(sizeof(Node));
     newNode->content = soldier;
@@ -56,7 +59,7 @@ Node *create(Soldier soldier)
     return newNode;
 }
 
-void print(Node *list)
+void printList(Node *list)
 {
     if (list == NULL)
     {
@@ -126,7 +129,7 @@ Node *insertAt(Node *list, Soldier soldier, int position)
     if (list == NULL)
         return insertAtStart(list, soldier);
 
-    Node *newNode = create(soldier),
+    Node *newNode = createList(soldier),
          *current = list;
 
     for (int i = 1; i != position; i++)
@@ -157,8 +160,7 @@ Node *removeAt(Node *list, int position)
 
     if (listSize == 1)
     {
-        list = NULL;
-        free(current);
+        return removeStart(list);
     }
 
     current = list->next;
@@ -195,15 +197,23 @@ Node *findLast(Node *list)
 
 Node *removeStart(Node *list)
 {
-    Node *auxiliaryNode;
     if (list == NULL)
         return list;
 
-    auxiliaryNode = list->next;
-    list->next = auxiliaryNode->next;
+    if (list->next == list)
+    {
+        free(list);
+        list = NULL;
 
-    free(auxiliaryNode);
+        return list;
+    }
 
+    Node *temporaryNode = list->next;
+    
+    list->next = temporaryNode->next;
+    free(temporaryNode);
+    temporaryNode = NULL;
+    
     return list;
 }
 
@@ -262,12 +272,12 @@ Node *removeBy(Node *list, Soldier soldier)
     return list;
 }
 
-void finishList(Node *list)
+void destroyList(Node *list)
 {
     Node *current = list->next;
     do
     {
-        list = removeBy(list, current->content);
+        list = removeStart(list);
         current = list->next;
         current = current->next;
     } while (current != list->next);
@@ -401,7 +411,7 @@ void orderBySelectionSort(Node *list)
     } while (i->next != list);
 
     clock_t end = clock();
-    
+
     timeSpent(begin, end);
 }
 

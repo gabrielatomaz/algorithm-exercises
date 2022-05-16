@@ -17,9 +17,9 @@ typedef struct node Node;
 Soldier *createSoldier(int id, char name[30]);
 Soldier findBiggestSoldierId(Node *list);
 
-Node *create(Soldier soldier);
-void finishList(Node *list);
-void print(Node *list);
+Node *createList(Soldier soldier);
+void destroyList(Node *list);
+void printList(Node *list);
 
 Node *insertAtStart(Node *list, Soldier soldier);
 Node *insertAt(Node *list, Soldier soldier, int position);

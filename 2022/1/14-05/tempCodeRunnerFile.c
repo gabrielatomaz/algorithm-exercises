@@ -1,1 +1,0 @@
-    printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
