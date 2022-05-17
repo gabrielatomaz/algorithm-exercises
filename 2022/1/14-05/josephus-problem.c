@@ -7,7 +7,7 @@
 
 int main()
 {
-	Node *soldiers = NULL;
+	/*Node *soldiers = NULL;
 	int totalSoldiers = 5, soldierId;
 	char soldierName[30];
 
@@ -44,25 +44,22 @@ int main()
 	stab(soldiers, stabNumber, position);
 
 	printf("\n------------------------Problema de Josephus------------------------\n");
-
-	// Node *list = NULL;
-
-	// Soldier *soldier1 = createSoldier(1, "nome1");
-	// Soldier *soldier2 = createSoldier(2, "nome2");
-	// Soldier *soldier3 = createSoldier(3, "nome3");
-	// Soldier *soldier4 = createSoldier(4, "nome4");
-	// Soldier *soldier5 = createSoldier(5, "nome5");
-	// Soldier *soldier6 = createSoldier(6, "nome6");
-	// Soldier *soldier7 = createSoldier(7, "nome7");
-
-	// list = insertAtEnd(list, *soldier2);
-	// list = insertAtEnd(list, *soldier3);
-	// list = insertAtStart(list, *soldier6);
-	// list = insertAt(list, *soldier4, 2);
-	// list = insertAtStart(list, *soldier7);
-	// list = insertAtEnd(list, *soldier5);
-
-	// orderBySelectionSort(list);
+*/
+	 Node *list = NULL;
+	 Soldier *soldier1 = createSoldier(1, "nome1");
+	 Soldier *soldier2 = createSoldier(2, "nome2");
+	 Soldier *soldier3 = createSoldier(3, "nome3");
+	 Soldier *soldier4 = createSoldier(4, "nome4");
+	 Soldier *soldier5 = createSoldier(5, "nome5");
+	 Soldier *soldier6 = createSoldier(6, "nome6");
+	 Soldier *soldier7 = createSoldier(7, "nome7");
+	 list = insertAtEnd(list, *soldier2);
+	 list = insertAtEnd(list, *soldier3);
+	 list = insertAtStart(list, *soldier6);
+	 list = insertAt(list, *soldier4, 2);
+	 list = insertAtStart(list, *soldier7);
+	 list = insertAtEnd(list, *soldier5);
+	 orderBySelectionSort(list);
 
 	// list = removeEvenValues(list);
 	// list = removeAt(list, 2);
@@ -79,9 +76,9 @@ int main()
 
 	// printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
 
-	// orderByQuickSort(list);
+	//orderByQuickSort(list);
 
-	// printList(list);
+	 printList(list);
 
 	return 0;
 }
@@ -363,9 +360,7 @@ Soldier findBiggestSoldierId(Node *list)
 	for (int i = 1; i < listSize; i++)
 	{
 		if (current->content.id > result.id)
-		{
 			result = current->content;
-		}
 
 		current = current->next;
 	}
@@ -396,22 +391,23 @@ Node *partition(Node *first, Node *last)
 	Node *pivot = first;
 	Node *front = first;
 	Soldier temp;
+
 	while (front != NULL && front != last)
 	{
 		if (front->content.id < last->content.id)
 		{
 			pivot = first;
-			// Swap node value
 			temp = first->content;
+
 			first->content = front->content;
 			front->content = temp;
-			// Visit to next node
+
 			first = first->next;
 		}
-		// Visit to next node
+
 		front = front->next;
 	}
-	// Change last node value to current node
+
 	temp = first->content;
 	first->content = last->content;
 	last->content = temp;
@@ -436,19 +432,15 @@ void orderByQuickSort(Node *list)
 void orderByQuickSortRecursive(Node *first, Node *last)
 {
 	if (first == last)
-	{
 		return;
-	}
 
 	Node *pivot = partition(first, last);
+
 	if (pivot != NULL && pivot->next != NULL)
-	{
 		orderByQuickSortRecursive(pivot->next, last);
-	}
+	
 	if (pivot != NULL && first != pivot)
-	{
 		orderByQuickSortRecursive(first, pivot);
-	}
 }
 
 void orderBySelectionSort(Node *list)
@@ -474,10 +466,13 @@ void orderBySelectionSort(Node *list)
 			}
 
 			j = j->next;
+			
 		} while (j != list->next);
-
+		
 		i = i->next;
-	} while (i->next != list);
+		
+	} while (i->next != list->next);
+	
 
 	clock_t end = clock();
 
