@@ -45,21 +45,21 @@ int main()
 
 	printf("\n------------------------Problema de Josephus------------------------\n");
 */
-	 Node *list = NULL;
-	 Soldier *soldier1 = createSoldier(1, "nome1");
-	 Soldier *soldier2 = createSoldier(2, "nome2");
-	 Soldier *soldier3 = createSoldier(3, "nome3");
-	 Soldier *soldier4 = createSoldier(4, "nome4");
-	 Soldier *soldier5 = createSoldier(5, "nome5");
-	 Soldier *soldier6 = createSoldier(6, "nome6");
-	 Soldier *soldier7 = createSoldier(7, "nome7");
-	 list = insertAtEnd(list, *soldier2);
-	 list = insertAtEnd(list, *soldier3);
-	 list = insertAtStart(list, *soldier6);
-	 list = insertAt(list, *soldier4, 2);
-	 list = insertAtStart(list, *soldier7);
-	 list = insertAtEnd(list, *soldier5);
-	 orderBySelectionSort(list);
+	Node *list = NULL;
+	Soldier *soldier1 = createSoldier(1, "nome1");
+	Soldier *soldier2 = createSoldier(2, "nome2");
+	Soldier *soldier3 = createSoldier(3, "nome3");
+	Soldier *soldier4 = createSoldier(4, "nome4");
+	Soldier *soldier5 = createSoldier(5, "nome5");
+	Soldier *soldier6 = createSoldier(6, "nome6");
+	Soldier *soldier7 = createSoldier(7, "nome7");
+	list = insertAtEnd(list, *soldier2);
+	list = insertAtEnd(list, *soldier3);
+	list = insertAtStart(list, *soldier6);
+	list = insertAt(list, *soldier4, 2);
+	list = insertAtStart(list, *soldier7);
+	list = insertAtEnd(list, *soldier5);
+	// orderBySelectionSort(list);
 
 	// list = removeEvenValues(list);
 	// list = removeAt(list, 2);
@@ -76,9 +76,9 @@ int main()
 
 	// printf("Há soldados na lista? %s\n", isEmpty(list) ? "Não" : "Sim");
 
-	//orderByQuickSort(list);
+	// orderByQuickSort(list);
 
-	 printList(list);
+	printList(list);
 
 	return 0;
 }
@@ -438,7 +438,7 @@ void orderByQuickSortRecursive(Node *first, Node *last)
 
 	if (pivot != NULL && pivot->next != NULL)
 		orderByQuickSortRecursive(pivot->next, last);
-	
+
 	if (pivot != NULL && first != pivot)
 		orderByQuickSortRecursive(first, pivot);
 }
@@ -466,13 +466,12 @@ void orderBySelectionSort(Node *list)
 			}
 
 			j = j->next;
-			
+
 		} while (j != list->next);
-		
+
 		i = i->next;
-		
+
 	} while (i->next != list->next);
-	
 
 	clock_t end = clock();
 
