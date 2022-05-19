@@ -23,7 +23,7 @@ public enum MathSignEnum {
                     .get();
         }
     },
-    TIMES("X") {
+    TIMES("*") {
         @Override
         public String doMath(String... values) {
             return convertValuesToStreamDouble(values)
@@ -42,8 +42,6 @@ public enum MathSignEnum {
         }
     };
 
-    private static final String TIMES_STRING = "*";
-
     private String value;
 
     private MathSignEnum(String value) {
@@ -60,12 +58,7 @@ public enum MathSignEnum {
         return Arrays.stream(MathSignEnum.values())
                 .filter(mathSigEnum -> mathSigEnum.value.equalsIgnoreCase(mathSign))
                 .findAny()
-                .map(mathSigEnum -> {
-                    if (MathSignEnum.TIMES.equals(mathSigEnum))
-                        mathSigEnum.value = TIMES_STRING;
-
-                    return mathSigEnum;
-                }).get();
+                .get();
     }
 
     private static Stream<Double> convertValuesToStreamDouble(String[] values) {

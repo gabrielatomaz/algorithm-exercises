@@ -10,19 +10,10 @@ public class CalculatorController {
     private static final String REGEX = "\\";
 
     @FXML
-    private Button division;
-
-    @FXML
-    private Button minus;
-
-    @FXML
-    private Button plus;
+    private Button plus, times, division, minus;
 
     @FXML
     private Label result;
-
-    @FXML
-    private Button times;
 
     private String currentLabel = ZERO_VALUE;
 
@@ -38,7 +29,8 @@ public class CalculatorController {
     @FXML
     private void setResult(ActionEvent event) {
         enableMathButtons();
-        this.result.setText(getResult());
+        doMath();
+        this.result.setText(this.currentLabel);
     }
 
     @FXML
@@ -52,7 +44,7 @@ public class CalculatorController {
 
             if (isAMathSign(text)) {
                 disableMathButtons();
-                mathSignEnum = MathSignEnum.findMathSingEnum(text);
+                this.mathSignEnum = MathSignEnum.findMathSingEnum(text);
                 this.currentLabel += mathSignEnum.getValue();
             } else
                 this.currentLabel += text;
@@ -91,13 +83,9 @@ public class CalculatorController {
         minus.setDisable(Boolean.FALSE);
     }
 
-    private String getResult() {
-        var values = this.currentLabel.split(
-                REGEX.concat(mathSignEnum.getValue()));
+    private void doMath() {
+        var values = this.currentLabel.split(REGEX.concat(mathSignEnum.getValue()));
 
-        if (values.length == 2)
-            this.currentLabel = mathSignEnum.doMath(values);
-
-        return this.currentLabel;
+        this.currentLabel = mathSignEnum.doMath(values);
     }
 }
