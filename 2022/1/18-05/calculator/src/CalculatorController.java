@@ -36,7 +36,7 @@ public class CalculatorController {
     }
 
     @FXML
-    void setResult(ActionEvent event) {
+    private void setResult(ActionEvent event) {
         enableMathButtons();
         this.result.setText(getResult());
     }
@@ -91,7 +91,7 @@ public class CalculatorController {
         minus.setDisable(Boolean.FALSE);
     }
 
-    public String getResult() {
+    private String getResult() {
         var values = this.currentLabel.split(
                 REGEX.concat(mathSignEnum.getValue()));
 
