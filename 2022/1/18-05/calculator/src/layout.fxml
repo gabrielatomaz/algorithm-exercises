@@ -9,9 +9,9 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CalculatorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CalculatorController">
    <top>
-      <HBox alignment="TOP_RIGHT" prefHeight="61.0" prefWidth="400.0" BorderPane.alignment="TOP_RIGHT">
+      <HBox alignment="TOP_RIGHT" prefHeight="140.0" prefWidth="400.0" BorderPane.alignment="TOP_RIGHT">
          <children>
             <Label fx:id="result" text="0">
                <font>
@@ -30,6 +30,15 @@
             <HBox prefHeight="0.0" prefWidth="380.0" />
             <HBox prefHeight="70.0">
                <children>
+                  <Button mnemonicParsing="false" onAction="#setResult" prefHeight="1000.0" prefWidth="1000.0" text="=">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="70.0">
+               <children>
                   <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="7">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -45,7 +54,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="/">
+                  <Button fx:id="division" mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="/">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -54,7 +63,7 @@
             </HBox>
             <HBox prefHeight="70.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="6">
+                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="4">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -69,7 +78,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="X">
+                  <Button fx:id="times" mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="X">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -83,7 +92,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="4">
+                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="2">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -93,7 +102,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="-">
+                  <Button fx:id="minus" mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="-">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -102,7 +111,7 @@
             </HBox>
             <HBox prefHeight="70.0">
                <children>
-                  <Button fx:id="clear" mnemonicParsing="false" onAction="#clear" prefHeight="1000.0" prefWidth="1000.0" text="C">
+                  <Button mnemonicParsing="false" onAction="#clear" prefHeight="1000.0" prefWidth="1000.0" text="C">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -112,12 +121,12 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="dot" mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text=".">
+                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text=".">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="+">
+                  <Button fx:id="plus" mnemonicParsing="false" onAction="#setEquation" prefHeight="1000.0" prefWidth="1000.0" text="+">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

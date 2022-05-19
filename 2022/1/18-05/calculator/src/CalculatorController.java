@@ -10,40 +10,57 @@ public class CalculatorController {
     private static final String REGEX = "\\";
 
     @FXML
-    private Button clear;
+    private Button division;
 
     @FXML
-    private Button dot;
+    private Button minus;
+
+    @FXML
+    private Button plus;
 
     @FXML
     private Label result;
 
+    @FXML
+    private Button times;
+
     private String currentLabel = ZERO_VALUE;
+
+    private MathSignEnum mathSignEnum;
 
     @FXML
     private void clear(ActionEvent event) {
-        this.result.setText(ZERO_VALUE);
+        this.currentLabel = ZERO_VALUE;
+        this.result.setText(currentLabel);
+        enableMathButtons();
+    }
+
+    @FXML
+    void setResult(ActionEvent event) {
+        enableMathButtons();
+        this.result.setText(getResult());
     }
 
     @FXML
     private void setEquation(ActionEvent event) {
-        var text = this.getButtonText(event);
+        try {
+            var text = this.getButtonText(event);
 
-        this.currentLabel = this.currentLabel.equals(ZERO_VALUE)
-                ? STRING_EMPTY
-                : this.currentLabel;
+            this.currentLabel = this.currentLabel.equals(ZERO_VALUE)
+                    ? STRING_EMPTY
+                    : this.currentLabel;
 
-        this.currentLabel += text;
+            if (isAMathSign(text)) {
+                disableMathButtons();
+                mathSignEnum = MathSignEnum.findMathSingEnum(text);
+                this.currentLabel += mathSignEnum.getValue();
+            } else
+                this.currentLabel += text;
 
-        if (isAMathSign(text)) {
-            var mathSign = MathSignEnum.findMathSingEnum(text);
-            var values = this.currentLabel.split(REGEX.concat(mathSign.getValue()));
-
-            if (values.length == 2)
-                this.currentLabel = mathSign.doMath(values);
+            this.result.setText(currentLabel);
+        } catch (Exception e) {
+            clear(event);
         }
-
-        this.result.setText(currentLabel);
     }
 
     private String getButtonText(ActionEvent event) {
@@ -54,9 +71,33 @@ public class CalculatorController {
     }
 
     private Boolean isAMathSign(String text) {
-        return text.equals(MathSignEnum.DIVISION.getValue()) ||
-                text.equals(MathSignEnum.MINUS.getValue())
-                || text.equals(MathSignEnum.PLUS.getValue())
-                || text.equals(MathSignEnum.TIMES.getValue());
+        return text.equalsIgnoreCase(MathSignEnum.DIVISION.getValue())
+                || text.equalsIgnoreCase(MathSignEnum.MINUS.getValue())
+                || text.equalsIgnoreCase(MathSignEnum.PLUS.getValue())
+                || text.equalsIgnoreCase(MathSignEnum.TIMES.getValue());
+    }
+
+    private void disableMathButtons() {
+        times.setDisable(Boolean.TRUE);
+        division.setDisable(Boolean.TRUE);
+        plus.setDisable(Boolean.TRUE);
+        minus.setDisable(Boolean.TRUE);
+    }
+
+    private void enableMathButtons() {
+        times.setDisable(Boolean.FALSE);
+        division.setDisable(Boolean.FALSE);
+        plus.setDisable(Boolean.FALSE);
+        minus.setDisable(Boolean.FALSE);
+    }
+
+    public String getResult() {
+        var values = this.currentLabel.split(
+                REGEX.concat(mathSignEnum.getValue()));
+
+        if (values.length == 2)
+            this.currentLabel = mathSignEnum.doMath(values);
+
+        return this.currentLabel;
     }
 }
