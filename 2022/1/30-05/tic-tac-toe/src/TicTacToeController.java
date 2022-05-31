@@ -64,7 +64,7 @@ public class TicTacToeController {
 
         clearPositionButtons();
 
-        enableButtons();
+        disableButtons(Boolean.FALSE);
 
         xScore.setText(ZERO_VALUE);
         oScore.setText(ZERO_VALUE);
@@ -114,7 +114,7 @@ public class TicTacToeController {
 
         clearPositionButtons();
 
-        enableButtons();
+        disableButtons(Boolean.FALSE);
     }
 
     private TicTacToeEnum togglePlayer() {
@@ -133,31 +133,19 @@ public class TicTacToeController {
                 xScore.setText(newScore.toString());
             }
 
-            disableButtons();
+            disableButtons(Boolean.TRUE);
         }
     }
 
-    private void disableButtons() {
-        one.setDisable(Boolean.TRUE);
-        two.setDisable(Boolean.TRUE);
-        three.setDisable(Boolean.TRUE);
-        four.setDisable(Boolean.TRUE);
-        five.setDisable(Boolean.TRUE);
-        six.setDisable(Boolean.TRUE);
-        seven.setDisable(Boolean.TRUE);
-        eight.setDisable(Boolean.TRUE);
-        nine.setDisable(Boolean.TRUE);
-    }
-
-    private void enableButtons() {
-        one.setDisable(Boolean.FALSE);
-        two.setDisable(Boolean.FALSE);
-        three.setDisable(Boolean.FALSE);
-        four.setDisable(Boolean.FALSE);
-        five.setDisable(Boolean.FALSE);
-        six.setDisable(Boolean.FALSE);
-        seven.setDisable(Boolean.FALSE);
-        eight.setDisable(Boolean.FALSE);
-        nine.setDisable(Boolean.FALSE);
+    private void disableButtons(boolean isEnable) {
+        one.setDisable(isEnable);
+        two.setDisable(isEnable);
+        three.setDisable(isEnable);
+        four.setDisable(isEnable);
+        five.setDisable(isEnable);
+        six.setDisable(isEnable);
+        seven.setDisable(isEnable);
+        eight.setDisable(isEnable);
+        nine.setDisable(isEnable);
     }
 }
