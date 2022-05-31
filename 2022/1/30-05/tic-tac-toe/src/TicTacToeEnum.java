@@ -27,8 +27,8 @@ public enum TicTacToeEnum {
             if (winnerX) {
                 ticTacToeEnum = X_VALUE;
                 break;
-            } 
-            
+            }
+
             if (winnerO) {
                 ticTacToeEnum = O_VALUE;
                 break;
@@ -36,11 +36,21 @@ public enum TicTacToeEnum {
         }
 
         for (int col = 0; col < 3; col++) {
-            var winner = board[0][col] == board[1][col]
-                    && board[1][col] == board[2][col];
+            var winnerX = board[0][col] == X_VALUE
+                    && board[1][col] == X_VALUE
+                    && board[2][col] == X_VALUE;
 
-            if (winner) {
-                ticTacToeEnum = board[0][col];
+            var winnerO = board[0][col] == O_VALUE
+                    && board[1][col] == O_VALUE
+                    && board[2][col] == O_VALUE;
+
+            if (winnerX) {
+                ticTacToeEnum = X_VALUE;
+                break;
+            }
+
+            if (winnerO) {
+                ticTacToeEnum = O_VALUE;
                 break;
             }
         }
