@@ -113,7 +113,7 @@ public class TicTacToeController {
         clearBoard();
 
         clearPositionButtons();
-        
+
         enableButtons();
     }
 
@@ -138,32 +138,15 @@ public class TicTacToeController {
     }
 
     private void disableButtons() {
-        if (EMPTY_STRING.equals(one.getText()))
-            one.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(two.getText()))
-            two.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(three.getText()))
-            three.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(four.getText()))
-            four.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(five.getText()))
-            five.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(six.getText()))
-            six.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(seven.getText()))
-            seven.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(eight.getText()))
-            eight.setDisable(Boolean.TRUE);
-
-        if (EMPTY_STRING.equals(nine.getText()))
-            nine.setDisable(Boolean.TRUE);
+        one.setDisable(Boolean.TRUE);
+        two.setDisable(Boolean.TRUE);
+        three.setDisable(Boolean.TRUE);
+        four.setDisable(Boolean.TRUE);
+        five.setDisable(Boolean.TRUE);
+        six.setDisable(Boolean.TRUE);
+        seven.setDisable(Boolean.TRUE);
+        eight.setDisable(Boolean.TRUE);
+        nine.setDisable(Boolean.TRUE);
     }
 
     private void enableButtons() {
