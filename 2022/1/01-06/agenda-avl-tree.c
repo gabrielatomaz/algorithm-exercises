@@ -5,30 +5,54 @@
 #include "agenda-avl-tree-lib.h"
 
 int main() {
-  Node *tree = NULL;
+  Node *agenda = NULL;
+  int menu = 1, phoneNumber;
+  char name[30];
 
-  tree = insert(tree, 12, "name1");
-  tree = insert(tree, 8, "name3");
-  tree = insert(tree, 18, "name4");
-  tree = insert(tree, 17, "name5");
-  tree = insert(tree, 11, "name6");
-  tree = insert(tree, 5, "name7");
-  tree = insert(tree, 4, "name7");
+  while (menu >= 1 && menu <= 7) {
+    printf("\n---------------AGENDA MENU----------------\n");
+    printf("\n1. Incluir\n");
+    printf("2. Buscar\n");
+    printf("3. Excluir\n");
+    printf("4. Imprimir ordenado\n");
+    printf("5. Imprimir a altura da árvore\n");
+    printf("6. Imprimir árvore\n");
+    printf("7. Imprimir o total de elementos na árvore\n");
+    printf("\n-----------------------------------------\n");
+    scanf("%d", &menu);
 
-  printAsTree(tree);
-  printf("\n\n");
-  printOrdered(tree);
-  printf("\n\n");
-  printf("h: %d", height(tree));
-  printf("\n\n");
-  deleteNodeByPhoneNumber(tree, 5);
-  printAsTree(tree);
-  printf("\n\n");
-  printOrdered(tree);
-  printf("\n\n");
-  printf("h: %d", height(tree));
+    if (menu == 1) {
+      printf("\nQual nome você deseja salvar na agenda?\n");
+      scanf("%s", name);
+      printf("\nE qual o telefone?\n");
+      scanf("%d", &phoneNumber);
 
-  findByPhoneNumber(tree, 17);
+      agenda = insert(agenda, phoneNumber, name);
+
+      printf("\nValor inserido com sucesso!\n");
+    } else if (menu == 2) {
+      printf("\nQual telefone você está buscando?\n");
+      scanf("%d", &phoneNumber);
+      findByPhoneNumber(agenda, phoneNumber);
+    } else if (menu == 3) {
+      printf("\nQual telefone você gostaria de remover?\n");
+      scanf("%d", &phoneNumber);
+
+      deleteNodeByPhoneNumber(agenda, phoneNumber);
+      printf("\nValor removido com sucesso!\n");
+    } else if (menu == 4) {
+      printf("\nValores ordenados: \n");
+      printOrdered(agenda);
+      printf("\n");
+    } else if (menu == 5) {
+      printf("\nA altura da árvore é: %d \n", height(agenda));
+    } else if (menu == 6) {
+      printAsTree(agenda);
+    } else if (menu == 7) {
+      printf("\nO número total de elementos na árvore é: %d\n",
+             totalElementsCount(agenda));
+    }
+  }
 
   return 0;
 }
@@ -98,11 +122,11 @@ Node *insert(Node *node, int phoneNumber, char name[30]) {
     return createNode(phoneNumber, name);
 
   int shouldInsertLeft = phoneNumber < node->phoneNumber;
-  int shouldInserRight = phoneNumber > node->phoneNumber;
+  int shouldInsertRight = phoneNumber > node->phoneNumber;
 
   if (shouldInsertLeft)
     node->left = insert(node->left, phoneNumber, name);
-  else if (shouldInserRight)
+  else if (shouldInsertRight)
     node->right = insert(node->right, phoneNumber, name);
   else
     return node;
@@ -160,6 +184,8 @@ Node *rebalanceRight(Node *node, int phoneNumber) {
 void printAsTree(Node *node) {
   int heightTree = height(node);
 
+  printf("\nValores em formato de árvore: \n");
+
   for (int level = 1; level <= heightTree; level++) {
     printAsTreeRecursive(node, level);
     printf("\n");
@@ -167,10 +193,12 @@ void printAsTree(Node *node) {
 }
 
 void printAsTreeRecursive(Node *node, int level) {
-  if (node == NULL)
+  if (node == NULL) {
+    printf(". ");
     return;
+  }
 
-  if (level == 1)
+  if (level == 1) 
     printf("%d ", node->phoneNumber);
   else if (level > 1) {
     printAsTreeRecursive(node->left, level - 1);
@@ -208,8 +236,10 @@ Node *minValueNode(Node *node) {
 }
 
 Node *deleteNodeByPhoneNumber(Node *node, int phoneNumber) {
-  if (node == NULL)
+  if (node == NULL) {
+    printf("\nNão foi possível remover esse número.\n");
     return node;
+  }
 
   int shouldDeleteLeft = phoneNumber < node->phoneNumber;
   int shouldDeleteRight = phoneNumber > node->phoneNumber;
@@ -251,8 +281,10 @@ Node *deleteNodeByPhoneNumber(Node *node, int phoneNumber) {
 }
 
 void findByPhoneNumber(Node *node, int phoneNumber) {
-  if (node == NULL)
+  if (node == NULL) {
+    printf("\nNão foi possível localizar esse número.\n");
     return;
+  }
 
   int shouldFindLeft = phoneNumber < node->phoneNumber;
   int shouldFindRight = phoneNumber > node->phoneNumber;
