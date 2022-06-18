@@ -54,10 +54,10 @@ public class Post implements Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0},{1},{2},{3}",
+        return MessageFormat.format("{0} - {1}\n {2} \n{3}",
                 this.autor,
-                this.content,
                 this.timestamp,
+                this.content,
                 this.visibility);
     }
 

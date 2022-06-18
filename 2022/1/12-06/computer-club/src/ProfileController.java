@@ -19,8 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
@@ -28,16 +26,15 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.swing.event.ChangeListener;
-
 import context.UserContext;
 import entities.User;
 
 public class ProfileController implements Initializable {
 
     private static final String SCENE_TITLE = "Clubinho da Computação";
+    private static final String LAYOUT_VALUE = "layout.fxml";
 
-    private static final User userContext = UserContext.getInstance().getUser();
+    private static final User USER = UserContext.getInstance().getUser();
 
     @FXML
     private TextField address;
@@ -95,8 +92,8 @@ public class ProfileController implements Initializable {
 
             if (ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
                     || ProfileRouteEnum.FOLLOWINGS.getRoute().equals(route)) {
-                var followers = this.userContext.getFollowers();
-                var followings = this.userContext.getFollowings();
+                var followers = USER.getFollowers();
+                var followings = USER.getFollowings();
                 if (Objects.isNull(followers) || Objects.isNull(followings)) {
                     var contentText = ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
                             ? "Você não possui nenhum seguidor!"
@@ -169,19 +166,19 @@ public class ProfileController implements Initializable {
                     updateAvatar(newValue);
                 });
 
-        this.name.setText(userContext.getName());
-        this.email.setText(userContext.getEmail());
-        this.password.setText(userContext.getPassword());
-        this.address.setText(userContext.getAddress());
-        this.cellPhone.setText(userContext.getCellPhone());
-        this.telephone.setText(userContext.getTelephone());
-        this.user.setText(userContext.getUser());
-        this.socialMedia.setText(userContext.getSocialMedia());
-        this.studies.setText(userContext.getStudies());
-        this.interests.setText(userContext.getInterests().stream().map(Object::toString)
+        this.name.setText(USER.getName());
+        this.email.setText(USER.getEmail());
+        this.password.setText(USER.getPassword());
+        this.address.setText(USER.getAddress());
+        this.cellPhone.setText(USER.getCellPhone());
+        this.telephone.setText(USER.getTelephone());
+        this.user.setText(USER.getUser());
+        this.socialMedia.setText(USER.getSocialMedia());
+        this.studies.setText(USER.getStudies());
+        this.interests.setText(USER.getInterests().stream().map(Object::toString)
                 .collect(Collectors.joining(", ")));
 
-        updateAvatar(userContext.getAvatar());
+        updateAvatar(USER.getAvatar());
     }
 
     private void updateAvatar(String value) {
@@ -223,6 +220,22 @@ public class ProfileController implements Initializable {
                     .findAny()
                     .orElse(DEFAULT);
         }
+    }
+
+    @FXML
+    private void logout(ActionEvent event) throws IOException {
+        var stage = new Stage();
+        var path = getClass().getResource(LAYOUT_VALUE);
+        var fxmlLoader = new FXMLLoader(path);
+        var root = (Parent) fxmlLoader.load();
+        var scene = new Scene(root);
+
+        stage.setTitle(SCENE_TITLE);
+        stage.setScene(scene);
+        stage.show();
+
+        var node = (Node) event.getSource();
+        node.getScene().getWindow().hide();
     }
 
 }

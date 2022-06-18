@@ -20,7 +20,7 @@ public class FollowingsController implements Initializable {
     private static final String LAYOUT_VALUE = "layout-menu.fxml";
     private static final String SCENE_TITLE = "Clubinho da Computação";
 
-    private static final User user = UserContext.getInstance().getUser();
+    private static final User USER = UserContext.getInstance().getUser();
 
     @FXML
     private ListView<User> followings;
@@ -49,7 +49,7 @@ public class FollowingsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         var followings = FXCollections.observableArrayList(
-                this.user.getFollowings());
+                USER.getFollowings());
 
         for (User user : followings) {
             this.followings.getItems().add(user);

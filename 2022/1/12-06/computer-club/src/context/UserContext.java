@@ -19,6 +19,10 @@ public class UserContext {
         return INSTANCE;
     }
 
+    public static void destroy() {
+        INSTANCE = null;
+    }
+
     public User getUser() {
         return user;
     }

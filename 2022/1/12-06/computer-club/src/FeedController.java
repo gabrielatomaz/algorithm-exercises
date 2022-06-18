@@ -3,8 +3,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import context.UserContext;
+import entities.Post;
 import entities.User;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
-public class FollowersController implements Initializable {
+public class FeedController implements Initializable {
 
     private static final String LAYOUT_VALUE = "layout-menu.fxml";
     private static final String SCENE_TITLE = "Clubinho da Computação";
@@ -23,7 +23,7 @@ public class FollowersController implements Initializable {
     private static final User USER = UserContext.getInstance().getUser();
 
     @FXML
-    private ListView<User> followers;
+    private ListView<Post> posts;
 
     @FXML
     private void goToMenu(ActionEvent event) throws IOException {
@@ -41,19 +41,15 @@ public class FollowersController implements Initializable {
         node.getScene().getWindow().hide();
     }
 
-    @FXML
-    private void removeFollower(ActionEvent event) {
-
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        var followers = FXCollections.observableArrayList(
-                USER.getFollowers());
+        var followings = USER.getFollowings();
 
-        for (User user : followers) {
-            this.followers.getItems().add(user);
+        for (User user : followings) {
+            var posts = user.getPosts();
+            for (Post post : posts) {
+                this.posts.getItems().add(post);
+            }
         }
     }
-
 }

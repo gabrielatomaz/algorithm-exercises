@@ -25,7 +25,7 @@ public class PostController {
 
     private static final String FILES_POSTS_TXT = "src/posts.txt";
 
-    private static final User user = UserContext.getInstance().getUser();
+    private static final User USER = UserContext.getInstance().getUser();
 
     @FXML
     private TextArea content;
@@ -45,7 +45,7 @@ public class PostController {
         }
 
         var post = new Post(content,
-                user,
+                USER,
                 LocalDate.now(),
                 this.isVisible.isSelected());
 

@@ -61,7 +61,7 @@ public class MenuController implements Initializable {
         ADD_USER("Criar usuarios", "layout-add-user.fxml"),
         PROFILE("Perfil", "layout-profile.fxml"),
         FEED("Feed", "layout-feed.fxml"),
-        Search("Busca", "layout-search.fxml");
+        SEARCH("Busca", "layout-search.fxml");
 
 
         private String text;
