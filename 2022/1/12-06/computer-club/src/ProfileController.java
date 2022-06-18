@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.URL;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,14 +9,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -23,6 +27,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import javax.swing.event.ChangeListener;
 
 import context.UserContext;
 import entities.User;
@@ -78,31 +84,47 @@ public class ProfileController implements Initializable {
     }
 
     @FXML
-    private void updateAvatar(MouseEvent event) {
-
-    }
-
-    @FXML
     private void updateUser(ActionEvent event) {
 
     }
 
     private void createScene(ActionEvent event) throws IOException {
-        var buttonText = getButton(event).getText();
-        var route = ProfileRouteEnum.findMenuEnum(buttonText).getRoute();
+        try {
+            var buttonText = getButton(event).getText();
+            var route = ProfileRouteEnum.findMenuEnum(buttonText).getRoute();
 
-        var stage = new Stage();
-        var path = getClass().getResource(route);
-        var fxmlLoader = new FXMLLoader(path);
-        var root = (Parent) fxmlLoader.load();
-        var scene = new Scene(root);
+            if (ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
+                    || ProfileRouteEnum.FOLLOWINGS.getRoute().equals(route)) {
+                var followers = this.userContext.getFollowers();
+                var followings = this.userContext.getFollowings();
+                if (Objects.isNull(followers) || Objects.isNull(followings)) {
+                    var contentText = ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
+                            ? "Você não possui nenhum seguidor!"
+                            : "Você não segue nenhum usuário!";
 
-        stage.setTitle(SCENE_TITLE);
-        stage.setScene(scene);
-        stage.show();
+                    var alert = new Alert(AlertType.WARNING);
+                    alert.setContentText(contentText);
+                    alert.show();
 
-        var node = (Node) event.getSource();
-        node.getScene().getWindow().hide();
+                    return;
+                }
+            }
+
+            var stage = new Stage();
+            var path = getClass().getResource(route);
+            var fxmlLoader = new FXMLLoader(path);
+            var root = (Parent) fxmlLoader.load();
+            var scene = new Scene(root);
+
+            stage.setTitle(SCENE_TITLE);
+            stage.setScene(scene);
+            stage.show();
+
+            var node = (Node) event.getSource();
+            node.getScene().getWindow().hide();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private Button getButton(ActionEvent event) {
@@ -111,7 +133,7 @@ public class ProfileController implements Initializable {
 
     private enum ProfileRouteEnum {
         FOLLOWERS("Seguidores", "layout-followers.fxml"),
-        FOLLOWING("Seguidos", "layout-following.fxml"),
+        FOLLOWINGS("Seguidos", "layout-followings.fxml"),
         ADD_POST("Criar post", "layout-add-post.fxml"),
         MENU("Voltar para o menu", "layout-menu.fxml");
 
@@ -140,6 +162,13 @@ public class ProfileController implements Initializable {
         avatarOptions.getItems().add(AvatarEnum.FEMALE.getName());
         avatarOptions.getItems().add(AvatarEnum.MALE.getName());
 
+        avatarOptions.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((ObservableValue<? extends String> observable,
+                        String oldValue, String newValue) -> {
+                    updateAvatar(newValue);
+                });
+
         this.name.setText(userContext.getName());
         this.email.setText(userContext.getEmail());
         this.password.setText(userContext.getPassword());
@@ -152,16 +181,19 @@ public class ProfileController implements Initializable {
         this.interests.setText(userContext.getInterests().stream().map(Object::toString)
                 .collect(Collectors.joining(", ")));
 
+        updateAvatar(userContext.getAvatar());
+    }
+
+    private void updateAvatar(String value) {
         try {
-            var avatar = Objects.isNull(userContext.getAvatar())
+            var avatar = Objects.isNull(value)
                     ? AvatarEnum.DEFAULT.getPath()
-                    : userContext.getAvatar();
+                    : AvatarEnum.findMenuEnum(value).getPath();
             var image = new Image(getClass().getResourceAsStream(avatar));
             this.avatar.setImage(image);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     private enum AvatarEnum {

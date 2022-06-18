@@ -1,8 +1,12 @@
 package entities;
 
+import java.io.Serializable;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 
-public class Post {
+public class Post implements Serializable {
+
+    private static final long serialVersionUID = 2L;
 
     private String content;
     private User autor;
@@ -46,6 +50,15 @@ public class Post {
         this.autor = autor;
         this.timestamp = timestamp;
         this.visibility = visibility;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("{0},{1},{2},{3}",
+                this.autor,
+                this.content,
+                this.timestamp,
+                this.visibility);
     }
 
 }

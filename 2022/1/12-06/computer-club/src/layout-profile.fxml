@@ -63,7 +63,7 @@
       </HBox>
       <HBox prefHeight="50.0" prefWidth="200.0">
          <children>
-            <ChoiceBox fx:id="avatarOptions" accessibleHelp="Troque seu avatar" accessibleText="Troque seu avatar" onMouseClicked="#updateAvatar" prefHeight="1000.0" prefWidth="1000.0">
+            <ChoiceBox fx:id="avatarOptions" accessibleHelp="Troque seu avatar" accessibleText="Troque seu avatar" prefHeight="1000.0" prefWidth="1000.0">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
