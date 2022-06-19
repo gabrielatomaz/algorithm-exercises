@@ -105,7 +105,12 @@ public class ProfileController extends StageContext implements Initializable {
         user.setTelephone(this.telephone.getText());
         user.setSocialMedia(this.socialMedia.getText());
         user.setStudies(this.studies.getText());
-        user.setAvatar(this.avatarOptions.getSelectionModel().getSelectedItem());
+
+        var avatarSelected = this.avatarOptions.getSelectionModel().getSelectedItem();
+        var avatar = Objects.isNull(avatarSelected) || avatarSelected.isBlank() || avatarSelected.isEmpty()
+                ? CONTEXT_USER.getAvatar()
+                : avatarSelected;
+        user.setAvatar(avatar);
 
         var interests = StringUtils.splitByCommaDelimiter(this.interests.getText());
         user.setInterests(interests);
@@ -162,7 +167,7 @@ public class ProfileController extends StageContext implements Initializable {
                 user.setText(CONTEXT_USER.getUser());
                 socialMedia.setText(CONTEXT_USER.getSocialMedia());
                 studies.setText(CONTEXT_USER.getStudies());
-                interests.setText(StringUtils.joinWithCommaSpaceDelimiter(CONTEXT_USER.getInterests()));
+                interests.setText(StringUtils.joinWithCommaDelimiter(CONTEXT_USER.getInterests()));
 
                 avatarOptions.setPromptText(CONTEXT_USER.getAvatar());
 

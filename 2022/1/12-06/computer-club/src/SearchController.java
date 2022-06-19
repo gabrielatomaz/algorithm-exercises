@@ -53,7 +53,7 @@ public class SearchController extends StageContext implements Initializable {
         usersList = FileUtils.getAllUsersFromFile();
 
         usersList.forEach(user -> {
-            var interests = StringUtils.joinWithCommaSpaceDelimiter(user.getInterests());
+            var interests = StringUtils.joinWithCommaDelimiter(user.getInterests());
 
             var userView = MessageFormat.format(Constants.ViewConstants.USER_STRUCTURE,
                     user.getId(), user.getName(), interests);
@@ -80,7 +80,7 @@ public class SearchController extends StageContext implements Initializable {
         var usersFound = this.usersList.stream()
                 .filter(searchOptionEnum.searchBy(searchBy))
                 .map(user -> {
-                    var interests = StringUtils.joinWithCommaSpaceDelimiter(user.getInterests());
+                    var interests = StringUtils.joinWithCommaDelimiter(user.getInterests());
 
                     var userView = MessageFormat.format(Constants.ViewConstants.USER_STRUCTURE,
                             user.getId(), user.getName(), interests);
@@ -104,7 +104,7 @@ public class SearchController extends StageContext implements Initializable {
     private void clearSearch(ActionEvent event) {
         this.users.getItems().clear();
         this.usersList.forEach(user -> {
-            var interests = StringUtils.joinWithCommaSpaceDelimiter(user.getInterests());
+            var interests = StringUtils.joinWithCommaDelimiter(user.getInterests());
 
             var userView = MessageFormat.format(Constants.ViewConstants.USER_STRUCTURE,
                     user.getId(), user.getName(), interests);

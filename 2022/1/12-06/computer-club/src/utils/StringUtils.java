@@ -9,9 +9,9 @@ import constants.Constants;
 public class StringUtils {
     public static String EMPTY = "";
 
-    public static String joinWithCommaSpaceDelimiter(List<?> list) {
+    public static String joinWithCommaDelimiter(List<?> list) {
         return list.stream().map(Object::toString)
-                    .collect(Collectors.joining(DelimiterEnum.COMMA_SPACE.getValue()));
+                    .collect(Collectors.joining(DelimiterEnum.COMMA.getValue()));
     }
 
     public static String getFirstItemByDashDelimiter(String value) {
@@ -24,7 +24,6 @@ public class StringUtils {
 
     private enum DelimiterEnum {
         COMMA(","),
-        COMMA_SPACE(", "),
         SEMICOLON(";"),
         DASH("-");
 
