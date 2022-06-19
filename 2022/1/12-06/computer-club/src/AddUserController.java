@@ -1,9 +1,14 @@
+import java.io.EOFException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import java.util.List;
 
 import entities.User;
+import enums.AvatarEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -92,10 +97,11 @@ public class AddUserController {
                 interests,
                 this.studies.getText(),
                 this.isAdmin.isSelected(),
-                null,
-                null,
-                null,
-                null);
+                List.of(),
+                List.of(),
+                List.of(),
+                AvatarEnum.DEFAULT.getName(),
+                getNextId());
         try {
             var alert = new Alert(AlertType.INFORMATION);
             alert.setContentText("Usuário criado com sucesso!");
@@ -144,6 +150,35 @@ public class AddUserController {
         return Arrays.stream(fields)
                 .filter(field -> field.isBlank() || field.isEmpty())
                 .count() > 0;
+    }
+
+    private Long getNextId() {
+        Long idCount = 1L;
+        try {
+            var fileIn = new FileInputStream(FILES_USERS_TXT);
+            var objectIn = new ObjectInputStream(fileIn);
+            var keepReading = Boolean.TRUE;
+            try {
+                while (keepReading) {
+                    idCount += 1L;
+                    objectIn.readObject();
+                    objectIn = new ObjectInputStream(fileIn);
+                }
+                
+                objectIn.close();
+
+                return idCount;
+            } catch (EOFException e) {
+                keepReading = false;
+                objectIn.close();
+
+                return idCount;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return idCount;
     }
 
 }

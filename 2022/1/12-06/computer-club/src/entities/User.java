@@ -3,12 +3,16 @@ package entities;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import enums.AvatarEnum;
 
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id;
     private String name;
     private String avatar;
     private String user;
@@ -25,9 +29,12 @@ public class User implements Serializable {
     private List<User> followers;
     private List<User> followings;
 
+    public User() {
+    }
+
     public User(String name, String user, String password, String email, String address, String cellPhone,
             String telephone, String socialMedia, List<String> interests, String studies, Boolean isAdmin,
-            List<Post> posts, List<User> followers, List<User> followings, String avatar) {
+            List<Post> posts, List<User> followers, List<User> followings, String avatar, Long id) {
         this.name = name;
         this.user = user;
         this.password = password;
@@ -43,6 +50,15 @@ public class User implements Serializable {
         this.followers = followers;
         this.followings = followings;
         this.avatar = avatar;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAvatar() {
@@ -167,16 +183,27 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        var interests = this.interests.stream().map(Object::toString)
-                .collect(Collectors.joining(";"));
-        var followings = this.followings.stream().map(Object::toString)
-                .collect(Collectors.joining(";"));
-        var followers = this.followers.stream().map(Object::toString)
-                .collect(Collectors.joining(";"));
-        var posts = this.posts.stream().map(Object::toString)
-                .collect(Collectors.joining(";"));
+        var interests = Objects.isNull(this.interests)
+                ? ""
+                : this.interests.stream().map(Object::toString)
+                        .collect(Collectors.joining(";"));
 
-        return MessageFormat.format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
+        var followings = Objects.isNull(this.followings)
+                ? ""
+                : this.followings.stream().map(Object::toString)
+                        .collect(Collectors.joining(";"));
+
+        var followers = Objects.isNull(this.followers)
+                ? ""
+                : this.followers.stream().map(Object::toString)
+                        .collect(Collectors.joining(";"));
+
+        var posts = Objects.isNull(this.posts)
+                ? ""
+                : this.posts.stream().map(Object::toString)
+                        .collect(Collectors.joining(";"));
+
+        return MessageFormat.format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
                 this.name,
                 this.address,
                 this.cellPhone,
@@ -190,6 +217,8 @@ public class User implements Serializable {
                 interests,
                 followings,
                 followers,
-                posts);
+                posts,
+                this.avatar,
+                this.id);
     }
 }

@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.net.URL;
 
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
@@ -28,6 +27,7 @@ import java.util.stream.Collectors;
 
 import context.UserContext;
 import entities.User;
+import enums.AvatarEnum;
 
 public class ProfileController implements Initializable {
 
@@ -43,7 +43,7 @@ public class ProfileController implements Initializable {
     private ImageView avatar;
 
     @FXML
-    private ChoiceBox<String> avatarOptions;
+    private ComboBox<String> avatarOptions;
 
     @FXML
     private TextField cellPhone;
@@ -88,7 +88,7 @@ public class ProfileController implements Initializable {
     private void createScene(ActionEvent event) throws IOException {
         try {
             var buttonText = getButton(event).getText();
-            var route = ProfileRouteEnum.findMenuEnum(buttonText).getRoute();
+            var route = ProfileRouteEnum.findProfileRouteEnum(buttonText).getRoute();
 
             if (ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
                     || ProfileRouteEnum.FOLLOWINGS.getRoute().equals(route)) {
@@ -146,7 +146,7 @@ public class ProfileController implements Initializable {
             return this.route;
         }
 
-        public static ProfileRouteEnum findMenuEnum(String text) {
+        public static ProfileRouteEnum findProfileRouteEnum(String text) {
             return Arrays.stream(ProfileRouteEnum.values())
                     .filter(route -> route.text.equals(text))
                     .findAny()
@@ -156,15 +156,8 @@ public class ProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        avatarOptions.getItems().add(AvatarEnum.FEMALE.getName());
-        avatarOptions.getItems().add(AvatarEnum.MALE.getName());
-
-        avatarOptions.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((ObservableValue<? extends String> observable,
-                        String oldValue, String newValue) -> {
-                    updateAvatar(newValue);
-                });
+        Arrays.stream(AvatarEnum.values())
+                .forEach(avatarEnum -> avatarOptions.getItems().add(avatarEnum.getName()));
 
         this.name.setText(USER.getName());
         this.email.setText(USER.getEmail());
@@ -181,11 +174,14 @@ public class ProfileController implements Initializable {
         updateAvatar(USER.getAvatar());
     }
 
+    @FXML
+    private void changeAvatar(ActionEvent event) {
+        updateAvatar(this.avatarOptions.getSelectionModel().getSelectedItem());
+    }
+
     private void updateAvatar(String value) {
         try {
-            var avatar = Objects.isNull(value)
-                    ? AvatarEnum.DEFAULT.getPath()
-                    : AvatarEnum.findMenuEnum(value).getPath();
+            var avatar = AvatarEnum.findAvatarEnum(value).getPath();
             var image = new Image(getClass().getResourceAsStream(avatar));
             this.avatar.setImage(image);
         } catch (Exception e) {
@@ -193,37 +189,10 @@ public class ProfileController implements Initializable {
         }
     }
 
-    private enum AvatarEnum {
-        DEFAULT("Default", "/assets/default.png"),
-        FEMALE("Feminino", "/assets/female.png"),
-        MALE("Masculino", "/assets/male.png");
-
-        private String name;
-        private String path;
-
-        private AvatarEnum(String name, String path) {
-            this.name = name;
-            this.path = path;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public String getPath() {
-            return this.path;
-        }
-
-        public static AvatarEnum findMenuEnum(String text) {
-            return Arrays.stream(AvatarEnum.values())
-                    .filter(avatar -> avatar.name.equals(text))
-                    .findAny()
-                    .orElse(DEFAULT);
-        }
-    }
-
     @FXML
     private void logout(ActionEvent event) throws IOException {
+        UserContext.getInstance().setUser(null);
+
         var stage = new Stage();
         var path = getClass().getResource(LAYOUT_VALUE);
         var fxmlLoader = new FXMLLoader(path);

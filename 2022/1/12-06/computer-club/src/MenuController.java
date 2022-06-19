@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import context.UserContext;
@@ -12,15 +13,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class MenuController implements Initializable {
 
     private static final String SCENE_TITLE = "Clubinho da Computação";
 
-    private final static User user = UserContext.getInstance().getUser();
+    private final static User USER = UserContext.getInstance().getUser();
 
     @FXML
     private Label loginText;
@@ -34,6 +37,17 @@ public class MenuController implements Initializable {
             var buttonText = getButton(event).getText();
 
         var route = MenuEnum.findMenuEnum(buttonText).getRoute();
+
+        if (MenuEnum.FEED.getRoute().equals(route)) {
+            var followings = USER.getFollowings();
+            if (Objects.isNull(followings) || followings.isEmpty()) {
+                var alert = new Alert(AlertType.WARNING);
+                alert.setContentText("Você não segue nenhum usuário!");
+                alert.show();
+
+                return;
+            }
+        }
 
         var stage = new Stage();
         var path = getClass().getResource(route);
@@ -86,7 +100,7 @@ public class MenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.createUserButton.setVisible(user.isAdmin());
+        this.createUserButton.setVisible(USER.isAdmin());
     }
 
 }

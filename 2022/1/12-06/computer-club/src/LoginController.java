@@ -1,13 +1,20 @@
 import java.io.EOFException;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import context.UserContext;
 import entities.User;
+import enums.AvatarEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -83,4 +90,35 @@ public class LoginController {
         }
         return Boolean.FALSE;
     }
+
+    /*@Override
+    public void initialize(URL location, ResourceBundle resources) {
+        var user = new User(
+            "admin",
+            "admin",
+            "UFP31",
+            "admin",
+            "admin",
+            "admin",
+            "admin",
+            "admin",
+            List.of(),
+            "admin",
+            Boolean.TRUE,
+            List.of(),
+            List.of(),
+            List.of(),
+            AvatarEnum.DEFAULT.getName(),
+            1L);
+            
+        try (var fileOutputStream = new FileOutputStream(FILES_USERS_TXT, true)) {
+            var objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(user);
+            objectOutputStream.flush();
+            objectOutputStream.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }*/
 }

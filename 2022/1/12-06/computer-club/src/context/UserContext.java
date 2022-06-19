@@ -6,9 +6,9 @@ import entities.User;
 
 public class UserContext {
     
-    private static UserContext INSTANCE;
+    private static volatile UserContext INSTANCE;
 
-    private User user;
+    private volatile User user;
 
     private UserContext() {}
 
@@ -19,15 +19,15 @@ public class UserContext {
         return INSTANCE;
     }
 
-    public static void destroy() {
-        INSTANCE = null;
+    public synchronized void destroy() {
+        user = new User();
     }
 
-    public User getUser() {
+    public synchronized User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public synchronized void setUser(User user) {
         this.user = user;
     }
 }
