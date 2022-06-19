@@ -28,6 +28,10 @@ public class FileUtils {
     }
 
     public static void updateUser(List<User> users) {
+        updateUser(users, Boolean.FALSE);
+    }
+
+    public static void updateUser(List<User> users, Boolean shouldShowAlert) {
         try {
             Boolean isFirst = Boolean.FALSE;
             for (User user : users) {
@@ -37,9 +41,11 @@ public class FileUtils {
                     isFirst = Boolean.TRUE;
             }
 
-            AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.UPDATED_USER_SUCCESS);
+            if (shouldShowAlert)
+                AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.UPDATED_USER_SUCCESS);
         } catch (Exception e) {
-            AlertUtils.setAlert(AlertType.ERROR, Constants.AlertConstants.UPDATED_USER_ERROR);
+            if (shouldShowAlert)
+                AlertUtils.setAlert(AlertType.ERROR, Constants.AlertConstants.UPDATED_USER_ERROR);
         }
     }
 

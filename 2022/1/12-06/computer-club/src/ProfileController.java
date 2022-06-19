@@ -92,7 +92,7 @@ public class ProfileController extends StageContext implements Initializable {
             updatedUsers.add(user);
         });
 
-        FileUtils.updateUser(updatedUsers);
+        FileUtils.updateUser(updatedUsers, Boolean.TRUE);
     }
 
     private void setUserFields(User user) {

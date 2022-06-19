@@ -147,10 +147,15 @@ public class SearchController extends StageContext implements Initializable {
 
             CONTEXT_USER = contextUser;
 
-            FileUtils.updateUser(users);
+            try {
+                FileUtils.updateUser(users);
 
-            AlertUtils.setAlert(AlertType.INFORMATION,
-                    Constants.AlertConstants.FOLLOWED_USER_SUCCESS);
+                AlertUtils.setAlert(AlertType.INFORMATION,
+                        Constants.AlertConstants.FOLLOWED_USER_SUCCESS);
+            } catch (Exception e) {
+                AlertUtils.setAlert(AlertType.INFORMATION,
+                        Constants.AlertConstants.FOLLOWED_USER_SUCCESS);
+            }
         } else {
             AlertUtils.setAlert(AlertType.INFORMATION,
                     Constants.AlertConstants.FOLLOWED_USER_SUCCESS);

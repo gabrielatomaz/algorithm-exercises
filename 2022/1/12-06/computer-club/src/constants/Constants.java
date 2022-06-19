@@ -36,12 +36,15 @@ public final class Constants {
                 FOLLOWED_USER_SUCCESS = "Usuário seguido com sucesso!",
                 FOLLOWED_USER_ERROR = "Não foi possível seguir esse usuário!",
 
-                POSTS_NOT_FOUND = "Nenhuma postagem foi encontrada!";
+                POSTS_NOT_FOUND = "Nenhuma postagem foi encontrada!",
+                
+                UNFOLLOWED_USER_SUCCESS = "Você deixou de seguir esse usuário com sucesso!",
+                UNFOLLOWED_USER_ERROR = "Não foi possível deixar de seguir esse usuário!";
     }
 
     public static final class ViewConstants {
         public static String USER_STRUCTURE = "{0} - Nome: {1} \n Interesses: {2}",
                 POST_STRUCTURE = "{0} @{1} - {2} \n {3}",
-                FOLLOWERS_STRUCTURE = "{0} @{1}";
+                FOLLOWS_STRUCTURE = "{0} - {1} @{2}";
     }
 }

@@ -44,8 +44,8 @@ public class FollowersController extends StageContext implements Initializable {
                         CONTEXT_USER.getFollowers());
 
                 for (User user : followersObservableList) {
-                    var followerView = MessageFormat.format(Constants.ViewConstants.FOLLOWERS_STRUCTURE,
-                            user.getName(), user.getUser());
+                    var followerView = MessageFormat.format(Constants.ViewConstants.FOLLOWS_STRUCTURE,
+                            user.getId(), user.getName(), user.getUser());
 
                     followers.getItems().add(followerView);
                 }
