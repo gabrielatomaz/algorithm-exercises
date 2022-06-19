@@ -11,7 +11,7 @@ public class StringUtils {
 
     public static String joinWithCommaDelimiter(List<?> list) {
         return list.stream().map(Object::toString)
-                    .collect(Collectors.joining(DelimiterEnum.COMMA.getValue()));
+                .collect(Collectors.joining(DelimiterEnum.COMMA.getValue()));
     }
 
     public static String getFirstItemByDashDelimiter(String value) {
@@ -22,12 +22,18 @@ public class StringUtils {
         return Arrays.asList(value.split(DelimiterEnum.COMMA.getValue()));
     }
 
+    public static String joinWithSemicolonDelimitter(List<?> list) {
+        return list.stream().map(Object::toString)
+                .collect(Collectors.joining(DelimiterEnum.SEMICOLON.getValue()));
+    }
+
     private enum DelimiterEnum {
         COMMA(","),
         SEMICOLON(";"),
         DASH("-");
 
         private String value;
+
         private DelimiterEnum(String value) {
             this.value = value;
         }

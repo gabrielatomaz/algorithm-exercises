@@ -1,9 +1,12 @@
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import context.StageContext;
+import entities.Post;
 import entities.User;
+import enums.AvatarEnum;
 import enums.RouteEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -66,16 +69,16 @@ public class LoginController extends StageContext implements Initializable {
         // "admin",
         // "admin",
         // "admin",
-        // List.of(),
+        // new ArrayList<String>(),
         // "admin",
         // Boolean.TRUE,
-        // List.of(),
-        // List.of(),
-        // List.of(),
+        // new ArrayList<Post>(),
+        // new ArrayList<User>(),
+        // new ArrayList<User>(),
         // AvatarEnum.DEFAULT.getName(),
         // 1L);
 
-        //FileUtils.addUser(user);
+        // FileUtils.addUser(user);
 
     }
 }

@@ -2,8 +2,9 @@ package entities;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+
+import utils.StringUtils;
 
 public class User implements Serializable {
 
@@ -19,19 +20,19 @@ public class User implements Serializable {
     private String cellPhone;
     private String telephone;
     private String socialMedia;
-    private List<String> interests;
+    private ArrayList<String> interests;
     private String studies;
     private Boolean isAdmin;
-    private List<Post> posts;
-    private List<User> followers;
-    private List<User> followings;
+    private ArrayList<Post> posts;
+    private ArrayList<User> followers;
+    private ArrayList<User> followings;
 
     public User() {
     }
 
     public User(String name, String user, String password, String email, String address, String cellPhone,
-            String telephone, String socialMedia, List<String> interests, String studies, Boolean isAdmin,
-            List<Post> posts, List<User> followers, List<User> followings, String avatar, Long id) {
+            String telephone, String socialMedia, ArrayList<String> interests, String studies, Boolean isAdmin,
+            ArrayList<Post> posts, ArrayList<User> followers, ArrayList<User> followings, String avatar, Long id) {
         this.name = name;
         this.user = user;
         this.password = password;
@@ -130,11 +131,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public List<String> getInterests() {
+    public ArrayList<String> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public void setInterests(ArrayList<String> interests) {
         this.interests = interests;
     }
 
@@ -154,43 +155,36 @@ public class User implements Serializable {
         this.socialMedia = socialMedia;
     }
 
-    public List<Post> getPosts() {
+    public ArrayList<Post> getPosts() {
         return this.posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(ArrayList<Post> posts) {
         this.posts = posts;
     }
 
-    public List<User> getFollowers() {
+    public ArrayList<User> getFollowers() {
         return this.followers;
     }
 
-    public void setFollowers(List<User> followers) {
-        this.followers = followers;
+    public void setFollower(User follower) {
+        this.followers.add(follower);
     }
 
-    public List<User> getFollowings() {
+    public ArrayList<User> getFollowings() {
         return this.followings;
     }
 
-    public void setFollowings(List<User> following) {
-        this.followings = following;
+    public void setFollowing(User following) {
+        this.followings.add(following);
     }
 
     @Override
     public String toString() {
-        var interests = this.interests.stream().map(Object::toString)
-                        .collect(Collectors.joining(";"));
-
-        var followings = this.followings.stream().map(Object::toString)
-                        .collect(Collectors.joining(";"));
-
-        var followers = this.followers.stream().map(Object::toString)
-                        .collect(Collectors.joining(";"));
-
-        var posts = this.posts.stream().map(Object::toString)
-                        .collect(Collectors.joining(";"));
+        var interests = StringUtils.joinWithSemicolonDelimitter(this.interests);
+        var followings = StringUtils.joinWithSemicolonDelimitter(this.followings);
+        var followers = StringUtils.joinWithSemicolonDelimitter(this.followers);
+        var posts = StringUtils.joinWithSemicolonDelimitter(this.posts);
 
         return MessageFormat.format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",
                 this.name,

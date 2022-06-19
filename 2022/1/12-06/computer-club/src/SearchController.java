@@ -90,7 +90,8 @@ public class SearchController extends StageContext implements Initializable {
                 .collect(Collectors.toList());
 
         if (usersFound.isEmpty()) {
-            AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.USERS_NOT_FOUND);
+            AlertUtils.setAlert(AlertType.INFORMATION,
+                    Constants.AlertConstants.USERS_NOT_FOUND);
 
             return;
         }
@@ -115,8 +116,44 @@ public class SearchController extends StageContext implements Initializable {
 
     @FXML
     private void followUser(ActionEvent event) {
-        var user = this.users.getSelectionModel().getSelectedItem();
-        var userId = StringUtils.getFirstItemByDashDelimiter(user);
-        System.out.println(userId);
+        var selectedUser = this.users.getSelectionModel().getSelectedItem();
+        var userId = Long.parseLong(StringUtils.getFirstItemByDashDelimiter(selectedUser));
+
+        if (CONTEXT_USER.getId().equals(userId)) {
+            AlertUtils.setAlert(AlertType.INFORMATION,
+                    Constants.AlertConstants.YOU_CAN_NOT_FOLLOW_YOURSELF);
+
+            return;
+        }
+
+        var userOptional = FileUtils.findUserById(userId);
+
+        var users = FileUtils.getAllUsersFromFile();
+
+        var contextUserOptional = users
+                .stream()
+                .filter(user -> CONTEXT_USER.getId().equals(user.getId()))
+                .findFirst();
+
+        if (userOptional.isPresent() && contextUserOptional.isPresent()) {
+            var user = userOptional.get();
+            var contextUser = contextUserOptional.get();
+
+            users.remove(contextUser);
+
+            contextUser.setFollowing(user);
+
+            users.add(contextUser);
+
+            CONTEXT_USER = contextUser;
+
+            FileUtils.updateUser(users);
+
+            AlertUtils.setAlert(AlertType.INFORMATION,
+                    Constants.AlertConstants.FOLLOWED_USER_SUCCESS);
+        } else {
+            AlertUtils.setAlert(AlertType.INFORMATION,
+                    Constants.AlertConstants.FOLLOWED_USER_SUCCESS);
+        }
     }
 }

@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import constants.Constants;
 import context.StageContext;
 import entities.User;
 import enums.RouteEnum;
@@ -18,7 +20,7 @@ public class FollowersController extends StageContext implements Initializable {
     private User CONTEXT_USER;
 
     @FXML
-    private ListView<User> followers;
+    private ListView<String> followers;
 
     @FXML
     private void goToMenu(ActionEvent event) throws IOException {
@@ -42,7 +44,10 @@ public class FollowersController extends StageContext implements Initializable {
                         CONTEXT_USER.getFollowers());
 
                 for (User user : followersObservableList) {
-                    followers.getItems().add(user);
+                    var followerView = MessageFormat.format(Constants.ViewConstants.FOLLOWERS_STRUCTURE,
+                            user.getName(), user.getUser());
+
+                    followers.getItems().add(followerView);
                 }
             }
         });

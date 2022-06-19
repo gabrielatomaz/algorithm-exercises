@@ -1,11 +1,12 @@
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import constants.Constants;
 import context.StageContext;
+import entities.Post;
 import entities.User;
 import enums.AvatarEnum;
 import enums.RouteEnum;
@@ -66,7 +67,10 @@ public class AddUserController extends StageContext implements Initializable {
 
     @FXML
     private void createUser(ActionEvent event) throws IOException {
-        var interests = StringUtils.splitByCommaDelimiter(this.interests.getText());
+        var interestsList = StringUtils.splitByCommaDelimiter(this.interests.getText());
+        var interests = new ArrayList<String>();
+        interests.addAll(interestsList);
+
         if (hasEmptyField(this.name.getText(),
                 this.user.getText(),
                 this.password.getText(),
@@ -93,9 +97,9 @@ public class AddUserController extends StageContext implements Initializable {
                 interests,
                 this.studies.getText(),
                 this.isAdmin.isSelected(),
-                List.of(),
-                List.of(),
-                List.of(),
+                new ArrayList<Post>(),
+                new ArrayList<User>(),
+                new ArrayList<User>(),
                 AvatarEnum.DEFAULT.getName(),
                 FileUtils.getNexUserId());
         try {

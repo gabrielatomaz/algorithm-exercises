@@ -37,7 +37,7 @@ public class Post implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public Boolean getVisibility() {
+    public Boolean isVisible() {
         return this.visibility;
     }
 
@@ -54,11 +54,10 @@ public class Post implements Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0} - {1}\n {2} \n{3}",
+        return MessageFormat.format("{0},{1},{2},{3}",
                 this.autor,
                 this.timestamp,
                 this.content,
                 this.visibility);
     }
-
 }

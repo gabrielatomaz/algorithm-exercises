@@ -112,7 +112,9 @@ public class ProfileController extends StageContext implements Initializable {
                 : avatarSelected;
         user.setAvatar(avatar);
 
-        var interests = StringUtils.splitByCommaDelimiter(this.interests.getText());
+        var interestsList = StringUtils.splitByCommaDelimiter(this.interests.getText());
+        var interests = new ArrayList<String>();
+        interests.addAll(interestsList);
         user.setInterests(interests);
     }
 

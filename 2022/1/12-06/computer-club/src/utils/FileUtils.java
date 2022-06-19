@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import constants.Constants;
 import entities.*;
@@ -151,5 +153,23 @@ public class FileUtils {
         }
 
         return posts;
+    }
+
+    public static Optional<User> findUserById(Long id) {
+        var users = getAllUsersFromFile();
+
+        return users
+                .stream()
+                .filter(user -> id.equals(user.getId()))
+                .findFirst();
+    }
+
+    public static List<Post> findPostUserById(Long id) {
+        var posts = getAllPostsFromFile();
+
+        return posts
+                .stream()
+                .filter(post -> id.equals(post.getAutor().getId()))
+                .collect(Collectors.toList());
     }
 }
