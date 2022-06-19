@@ -104,25 +104,25 @@ public class ProfileController extends StageContext implements Initializable {
 
                 var interests = Arrays.asList(this.interests.getText().split(","));
                 user.setInterests(interests);
+
+                CONTEXT_USER = user;
             }
 
             updatedUsers.add(user);
         });
 
-        users.remove(CONTEXT_USER);
-
-        Boolean isFirst = Boolean.TRUE;
+        Boolean isFirst = Boolean.FALSE;
         try {
             for (User user : updatedUsers) {
                 var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, isFirst);
-
-                if (isFirst)
-                    isFirst = Boolean.FALSE;
 
                 var objectOutputStream = new ObjectOutputStream(fileOutputStream);
                 objectOutputStream.writeObject(user);
                 objectOutputStream.flush();
                 objectOutputStream.close();
+
+                if (!isFirst)
+                    isFirst = Boolean.TRUE;
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -185,6 +185,8 @@ public class ProfileController extends StageContext implements Initializable {
                 studies.setText(CONTEXT_USER.getStudies());
                 interests.setText(CONTEXT_USER.getInterests().stream().map(Object::toString)
                         .collect(Collectors.joining(", ")));
+
+                avatarOptions.setPromptText(CONTEXT_USER.getAvatar());
 
                 updateAvatar(CONTEXT_USER.getAvatar());
             }

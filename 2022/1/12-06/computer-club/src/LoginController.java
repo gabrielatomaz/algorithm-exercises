@@ -90,31 +90,31 @@ public class LoginController extends StageContext implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         // var user = new User(
-        // "admin",
-        // "admin",
-        // "UFP31",
-        // "admin",
-        // "admin",
-        // "admin",
-        // "admin",
-        // "admin",
-        // List.of(),
-        // "admin",
-        // Boolean.TRUE,
-        // List.of(),
-        // List.of(),
-        // List.of(),
-        // AvatarEnum.DEFAULT.getName(),
-        // 1L);
+        //         "admin",
+        //         "admin",
+        //         "UFP31",
+        //         "admin",
+        //         "admin",
+        //         "admin",
+        //         "admin",
+        //         "admin",
+        //         List.of(),
+        //         "admin",
+        //         Boolean.TRUE,
+        //         List.of(),
+        //         List.of(),
+        //         List.of(),
+        //         AvatarEnum.DEFAULT.getName(),
+        //         1L);
 
         // try (var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, true)) {
-        // var objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        // objectOutputStream.writeObject(user);
-        // objectOutputStream.flush();
-        // objectOutputStream.close();
+        //     var objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        //     objectOutputStream.writeObject(user);
+        //     objectOutputStream.flush();
+        //     objectOutputStream.close();
         // } catch (IOException e) {
-        // System.out.println(e.getMessage());
-        // e.printStackTrace();
+        //     System.out.println(e.getMessage());
+        //     e.printStackTrace();
         // }
 
     }
