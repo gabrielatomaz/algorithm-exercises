@@ -3,10 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-import enums.AvatarEnum;
 
 public class User implements Serializable {
 
@@ -183,24 +180,16 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        var interests = Objects.isNull(this.interests)
-                ? ""
-                : this.interests.stream().map(Object::toString)
+        var interests = this.interests.stream().map(Object::toString)
                         .collect(Collectors.joining(";"));
 
-        var followings = Objects.isNull(this.followings)
-                ? ""
-                : this.followings.stream().map(Object::toString)
+        var followings = this.followings.stream().map(Object::toString)
                         .collect(Collectors.joining(";"));
 
-        var followers = Objects.isNull(this.followers)
-                ? ""
-                : this.followers.stream().map(Object::toString)
+        var followers = this.followers.stream().map(Object::toString)
                         .collect(Collectors.joining(";"));
 
-        var posts = Objects.isNull(this.posts)
-                ? ""
-                : this.posts.stream().map(Object::toString)
+        var posts = this.posts.stream().map(Object::toString)
                         .collect(Collectors.joining(";"));
 
         return MessageFormat.format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}",

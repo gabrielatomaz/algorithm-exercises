@@ -1,31 +1,28 @@
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 
-import context.UserContext;
+import constants.Constants;
+import context.StageContext;
 import entities.Post;
 import entities.User;
+import enums.RouteEnum;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
+import utils.UserUtils;
 
-public class PostController {
+public class PostController extends StageContext implements Initializable {
 
-    private static final String SCENE_TITLE = "Clubinho da Computação";
-    private static final String LAYOUT_VALUE = "layout-menu.fxml";
-
-    private static final String FILES_POSTS_TXT = "src/posts.txt";
-
-    private static final User USER = UserContext.getInstance().getUser();
+    private User CONTEXT_USER;
 
     @FXML
     private TextArea content;
@@ -45,7 +42,7 @@ public class PostController {
         }
 
         var post = new Post(content,
-                USER,
+                CONTEXT_USER,
                 LocalDate.now(),
                 this.isVisible.isSelected());
 
@@ -55,7 +52,7 @@ public class PostController {
             alert.show();
             this.content.setText("");
 
-            var fileOutputStream = new FileOutputStream(FILES_POSTS_TXT, true);
+            var fileOutputStream = new FileOutputStream(Constants.FilesConstants.POSTS_FILE, true);
             var objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(post);
             objectOutputStream.flush();
@@ -69,18 +66,18 @@ public class PostController {
 
     @FXML
     private void goToMenu(ActionEvent event) throws IOException {
-        var stage = new Stage();
-        var path = getClass().getResource(LAYOUT_VALUE);
-        var fxmlLoader = new FXMLLoader(path);
-        var root = (Parent) fxmlLoader.load();
-        var scene = new Scene(root);
+        goTo(event, RouteEnum.MENU, CONTEXT_USER);
+    }
 
-        stage.setTitle(SCENE_TITLE);
-        stage.setScene(scene);
-        stage.show();
-
-        var node = (Node) event.getSource();
-        node.getScene().getWindow().hide();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                var stage = getStage();
+                CONTEXT_USER = new UserUtils().getContextUser(stage);
+            }
+        });
     }
 
 }

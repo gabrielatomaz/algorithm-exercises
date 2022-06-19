@@ -1,33 +1,37 @@
+import java.io.BufferedReader;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import context.UserContext;
+import constants.Constants;
+import context.StageContext;
 import entities.User;
 import enums.AvatarEnum;
+import enums.RouteEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.control.Alert.AlertType;
 
-public class LoginController {
+public class LoginController extends StageContext implements Initializable {
 
-    private static final String FILES_USERS_TXT = "src/users.txt";
-    private static final String LAYOUT_VALUE = "layout-menu.fxml";
-    private static final String SCENE_TITLE = "Clubinho da Computação";
+    private User CONTEXT_USER;
 
     @FXML
     private Label loginText;
@@ -39,28 +43,19 @@ public class LoginController {
     private TextField user;
 
     @FXML
-    void login(ActionEvent event) throws IOException, ClassNotFoundException {
+    private void login(ActionEvent event) throws IOException, ClassNotFoundException {
         if (isUserFound()) {
-            var stage = new Stage();
-            var path = getClass().getResource(LAYOUT_VALUE);
-            var fxmlLoader = new FXMLLoader(path);
-            var root = (Parent) fxmlLoader.load();
-            var scene = new Scene(root);
-
-            stage.setTitle(SCENE_TITLE);
-            stage.setScene(scene);
-            stage.show();
-
-            var node = (Node) event.getSource();
-            node.getScene().getWindow().hide();
+            goTo(event, RouteEnum.MENU, CONTEXT_USER);
         } else {
-            loginText.setText(loginText.getText().concat(": senha ou usuário errado."));
+            var alert = new Alert(AlertType.WARNING);
+            alert.setContentText("Senha e/ou usuário errado(s)!");
+            alert.show();
         }
     }
 
     private Boolean isUserFound() throws ClassNotFoundException, IOException {
         try {
-            var fileIn = new FileInputStream(FILES_USERS_TXT);
+            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
             var objectIn = new ObjectInputStream(fileIn);
             var keepReading = Boolean.TRUE;
             try {
@@ -70,11 +65,11 @@ public class LoginController {
                             && this.password.getText().equals(user.getPassword())) {
                         objectIn.close();
 
-                        UserContext.getInstance().setUser(user);
+                        CONTEXT_USER = user;
 
                         return Boolean.TRUE;
                     }
-                    
+
                     objectIn = new ObjectInputStream(fileIn);
                 }
 
@@ -91,34 +86,36 @@ public class LoginController {
         return Boolean.FALSE;
     }
 
-    /*@Override
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
-        var user = new User(
-            "admin",
-            "admin",
-            "UFP31",
-            "admin",
-            "admin",
-            "admin",
-            "admin",
-            "admin",
-            List.of(),
-            "admin",
-            Boolean.TRUE,
-            List.of(),
-            List.of(),
-            List.of(),
-            AvatarEnum.DEFAULT.getName(),
-            1L);
-            
-        try (var fileOutputStream = new FileOutputStream(FILES_USERS_TXT, true)) {
-            var objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(user);
-            objectOutputStream.flush();
-            objectOutputStream.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
+
+        // var user = new User(
+        // "admin",
+        // "admin",
+        // "UFP31",
+        // "admin",
+        // "admin",
+        // "admin",
+        // "admin",
+        // "admin",
+        // List.of(),
+        // "admin",
+        // Boolean.TRUE,
+        // List.of(),
+        // List.of(),
+        // List.of(),
+        // AvatarEnum.DEFAULT.getName(),
+        // 1L);
+
+        // try (var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, true)) {
+        // var objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        // objectOutputStream.writeObject(user);
+        // objectOutputStream.flush();
+        // objectOutputStream.close();
+        // } catch (IOException e) {
+        // System.out.println(e.getMessage());
+        // e.printStackTrace();
+        // }
+
+    }
 }

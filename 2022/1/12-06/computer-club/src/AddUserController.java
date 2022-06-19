@@ -4,17 +4,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import constants.Constants;
+import context.StageContext;
 import entities.User;
 import enums.AvatarEnum;
+import enums.RouteEnum;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -22,13 +25,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
+import utils.UserUtils;
 
-public class AddUserController {
+public class AddUserController extends StageContext implements Initializable {
 
-    private static final String LAYOUT_VALUE = "layout-menu.fxml";
-    private static final String SCENE_TITLE = "Clubinho da Computação";
-    private static final String FILES_USERS_TXT = "src/users.txt";
+    private User CONTEXT_USER;
 
     @FXML
     private TextField address;
@@ -118,7 +119,7 @@ public class AddUserController {
             this.studies.setText("");
             this.isAdmin.setSelected(Boolean.FALSE);
 
-            var fileOutputStream = new FileOutputStream(FILES_USERS_TXT, true);
+            var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, true);
             var objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(user);
             objectOutputStream.flush();
@@ -132,18 +133,7 @@ public class AddUserController {
 
     @FXML
     private void goToMenu(ActionEvent event) throws IOException {
-        var stage = new Stage();
-        var path = getClass().getResource(LAYOUT_VALUE);
-        var fxmlLoader = new FXMLLoader(path);
-        var root = (Parent) fxmlLoader.load();
-        var scene = new Scene(root);
-
-        stage.setTitle(SCENE_TITLE);
-        stage.setScene(scene);
-        stage.show();
-
-        var node = (Node) event.getSource();
-        node.getScene().getWindow().hide();
+        goTo(event, RouteEnum.MENU, CONTEXT_USER);
     }
 
     private Boolean hasEmptyField(String... fields) {
@@ -155,7 +145,7 @@ public class AddUserController {
     private Long getNextId() {
         Long idCount = 1L;
         try {
-            var fileIn = new FileInputStream(FILES_USERS_TXT);
+            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
             var objectIn = new ObjectInputStream(fileIn);
             var keepReading = Boolean.TRUE;
             try {
@@ -181,4 +171,14 @@ public class AddUserController {
         return idCount;
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                var stage = getStage();
+                CONTEXT_USER = new UserUtils().getContextUser(stage);
+            }
+        });
+    }
 }

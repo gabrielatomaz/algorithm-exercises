@@ -1,13 +1,15 @@
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,23 +20,24 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+import utils.UserUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import context.UserContext;
+import constants.Constants;
+import context.StageContext;
 import entities.User;
 import enums.AvatarEnum;
+import enums.RouteEnum;
 
-public class ProfileController implements Initializable {
+public class ProfileController extends StageContext implements Initializable {
 
-    private static final String SCENE_TITLE = "Clubinho da Computação";
-    private static final String LAYOUT_VALUE = "layout.fxml";
-
-    private static final User USER = UserContext.getInstance().getUser();
+    private User CONTEXT_USER;
 
     @FXML
     private TextField address;
@@ -77,25 +80,68 @@ public class ProfileController implements Initializable {
 
     @FXML
     private void goTo(ActionEvent event) throws IOException {
-        createScene(event);
+        goToWithValidations(event);
     }
 
     @FXML
     private void updateUser(ActionEvent event) {
+        var users = findUsers();
+        var updatedUsers = new ArrayList<User>();
 
+        users.forEach(user -> {
+            if (user.getId().equals(CONTEXT_USER.getId())) {
+
+                user.setName(this.name.getText());
+                user.setUser(this.user.getText());
+                user.setEmail(this.email.getText());
+                user.setPassword(this.password.getText());
+                user.setAddress(this.address.getText());
+                user.setCellPhone(this.cellPhone.getText());
+                user.setTelephone(this.telephone.getText());
+                user.setSocialMedia(this.socialMedia.getText());
+                user.setStudies(this.studies.getText());
+                user.setAvatar(this.avatarOptions.getSelectionModel().getSelectedItem());
+
+                var interests = Arrays.asList(this.interests.getText().split(","));
+                user.setInterests(interests);
+            }
+
+            updatedUsers.add(user);
+        });
+
+        users.remove(CONTEXT_USER);
+
+        Boolean isFirst = Boolean.TRUE;
+        try {
+            for (User user : updatedUsers) {
+                var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, isFirst);
+
+                if (isFirst)
+                    isFirst = Boolean.FALSE;
+
+                var objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(user);
+                objectOutputStream.flush();
+                objectOutputStream.close();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    private void createScene(ActionEvent event) throws IOException {
+    private void goToWithValidations(ActionEvent event) throws IOException {
         try {
             var buttonText = getButton(event).getText();
-            var route = ProfileRouteEnum.findProfileRouteEnum(buttonText).getRoute();
+            var route = RouteEnum.findProfileRouteEnum(buttonText);
 
-            if (ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
-                    || ProfileRouteEnum.FOLLOWINGS.getRoute().equals(route)) {
-                var followers = USER.getFollowers();
-                var followings = USER.getFollowings();
-                if (Objects.isNull(followers) || Objects.isNull(followings)) {
-                    var contentText = ProfileRouteEnum.FOLLOWERS.getRoute().equals(route)
+            if (RouteEnum.FOLLOWERS.equals(route)
+                    || RouteEnum.FOLLOWINGS.equals(route)) {
+                var followers = CONTEXT_USER.getFollowers();
+                var followings = CONTEXT_USER.getFollowings();
+                if (Objects.isNull(followers) || Objects.isNull(followings)
+                        || followers.isEmpty() || followings.isEmpty()) {
+                    var contentText = RouteEnum.FOLLOWERS.equals(route)
                             ? "Você não possui nenhum seguidor!"
                             : "Você não segue nenhum usuário!";
 
@@ -107,18 +153,7 @@ public class ProfileController implements Initializable {
                 }
             }
 
-            var stage = new Stage();
-            var path = getClass().getResource(route);
-            var fxmlLoader = new FXMLLoader(path);
-            var root = (Parent) fxmlLoader.load();
-            var scene = new Scene(root);
-
-            stage.setTitle(SCENE_TITLE);
-            stage.setScene(scene);
-            stage.show();
-
-            var node = (Node) event.getSource();
-            node.getScene().getWindow().hide();
+            goTo(event, route, CONTEXT_USER);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -128,50 +163,33 @@ public class ProfileController implements Initializable {
         return (Button) event.getSource();
     }
 
-    private enum ProfileRouteEnum {
-        FOLLOWERS("Seguidores", "layout-followers.fxml"),
-        FOLLOWINGS("Seguidos", "layout-followings.fxml"),
-        ADD_POST("Criar post", "layout-add-post.fxml"),
-        MENU("Voltar para o menu", "layout-menu.fxml");
-
-        private String text;
-        private String route;
-
-        private ProfileRouteEnum(String text, String route) {
-            this.text = text;
-            this.route = route;
-        }
-
-        public String getRoute() {
-            return this.route;
-        }
-
-        public static ProfileRouteEnum findProfileRouteEnum(String text) {
-            return Arrays.stream(ProfileRouteEnum.values())
-                    .filter(route -> route.text.equals(text))
-                    .findAny()
-                    .orElse(MENU);
-        }
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Arrays.stream(AvatarEnum.values())
                 .forEach(avatarEnum -> avatarOptions.getItems().add(avatarEnum.getName()));
 
-        this.name.setText(USER.getName());
-        this.email.setText(USER.getEmail());
-        this.password.setText(USER.getPassword());
-        this.address.setText(USER.getAddress());
-        this.cellPhone.setText(USER.getCellPhone());
-        this.telephone.setText(USER.getTelephone());
-        this.user.setText(USER.getUser());
-        this.socialMedia.setText(USER.getSocialMedia());
-        this.studies.setText(USER.getStudies());
-        this.interests.setText(USER.getInterests().stream().map(Object::toString)
-                .collect(Collectors.joining(", ")));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                var stage = getStage();
+                CONTEXT_USER = new UserUtils().getContextUser(stage);
 
-        updateAvatar(USER.getAvatar());
+                name.setText(CONTEXT_USER.getName());
+                email.setText(CONTEXT_USER.getEmail());
+                password.setText(CONTEXT_USER.getPassword());
+                address.setText(CONTEXT_USER.getAddress());
+                cellPhone.setText(CONTEXT_USER.getCellPhone());
+                telephone.setText(CONTEXT_USER.getTelephone());
+                user.setText(CONTEXT_USER.getUser());
+                socialMedia.setText(CONTEXT_USER.getSocialMedia());
+                studies.setText(CONTEXT_USER.getStudies());
+                interests.setText(CONTEXT_USER.getInterests().stream().map(Object::toString)
+                        .collect(Collectors.joining(", ")));
+
+                updateAvatar(CONTEXT_USER.getAvatar());
+            }
+        });
+
     }
 
     @FXML
@@ -191,20 +209,36 @@ public class ProfileController implements Initializable {
 
     @FXML
     private void logout(ActionEvent event) throws IOException {
-        UserContext.getInstance().setUser(null);
+        goTo(event, RouteEnum.LOGIN, null);
+    }
 
-        var stage = new Stage();
-        var path = getClass().getResource(LAYOUT_VALUE);
-        var fxmlLoader = new FXMLLoader(path);
-        var root = (Parent) fxmlLoader.load();
-        var scene = new Scene(root);
+    private List<User> findUsers() {
+        var users = new ArrayList<User>();
+        try {
+            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
+            var objectIn = new ObjectInputStream(fileIn);
+            var keepReading = Boolean.TRUE;
+            try {
+                while (keepReading) {
+                    User user = (User) objectIn.readObject();
 
-        stage.setTitle(SCENE_TITLE);
-        stage.setScene(scene);
-        stage.show();
+                    users.add(user);
 
-        var node = (Node) event.getSource();
-        node.getScene().getWindow().hide();
+                    objectIn = new ObjectInputStream(fileIn);
+                }
+
+                objectIn.close();
+            } catch (EOFException e) {
+                keepReading = false;
+                objectIn.close();
+
+                return users;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return users;
     }
 
 }

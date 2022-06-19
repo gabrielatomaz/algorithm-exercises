@@ -1,29 +1,24 @@
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import context.UserContext;
+import context.StageContext;
 import entities.User;
+import enums.RouteEnum;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
+import utils.UserUtils;
 
-public class MenuController implements Initializable {
+public class MenuController extends StageContext implements Initializable {
 
-    private static final String SCENE_TITLE = "Clubinho da Computação";
-
-    private final static User USER = UserContext.getInstance().getUser();
+    private User CONTEXT_USER;
 
     @FXML
     private Label loginText;
@@ -36,72 +31,42 @@ public class MenuController implements Initializable {
         try {
             var buttonText = getButton(event).getText();
 
-        var route = MenuEnum.findMenuEnum(buttonText).getRoute();
+            var route = RouteEnum.findMenuRouteEnum(buttonText);
 
-        if (MenuEnum.FEED.getRoute().equals(route)) {
-            var followings = USER.getFollowings();
-            if (Objects.isNull(followings) || followings.isEmpty()) {
-                var alert = new Alert(AlertType.WARNING);
-                alert.setContentText("Você não segue nenhum usuário!");
-                alert.show();
+            if (RouteEnum.FEED.equals(route)) {
+                var followings = CONTEXT_USER.getFollowings();
+                if (Objects.isNull(followings) || followings.isEmpty()) {
+                    var alert = new Alert(AlertType.WARNING);
+                    alert.setContentText("Você não segue nenhum usuário!");
+                    alert.show();
 
-                return;
+                    return;
+                }
             }
-        }
 
-        var stage = new Stage();
-        var path = getClass().getResource(route);
-        var fxmlLoader = new FXMLLoader(path);
-        var root = (Parent) fxmlLoader.load();
-        var scene = new Scene(root);
-
-        stage.setTitle(SCENE_TITLE);
-        stage.setScene(scene);
-        stage.show();
-        
-        var node = (Node) event.getSource();
-        node.getScene().getWindow().hide();
+            goTo(event, route, CONTEXT_USER);
         } catch (Exception e) {
-           System.out.println(e.getMessage());
-        }        
+            System.out.println(e.getMessage());
+        }
     }
 
     private Button getButton(ActionEvent event) {
         return (Button) event.getSource();
     }
 
-    private enum MenuEnum {
-        MENU("Menu", "layout-menu.fxml"),
-        ADD_USER("Criar usuarios", "layout-add-user.fxml"),
-        PROFILE("Perfil", "layout-profile.fxml"),
-        FEED("Feed", "layout-feed.fxml"),
-        SEARCH("Busca", "layout-search.fxml");
-
-
-        private String text;
-        private String route;
-
-        private MenuEnum(String text, String route) {
-            this.text = text;
-            this.route = route;
-        }
-
-        public String getRoute() {
-            return this.route;
-        }
-
-        public static MenuEnum findMenuEnum(String text) {
-            return Arrays.stream(MenuEnum.values())
-            .filter(menu -> menu.text.equals(text))
-            .findAny()
-            .orElse(MENU);
-        }
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.createUserButton.setVisible(USER.isAdmin());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                var stage = getStage();
+                CONTEXT_USER = new UserUtils().getContextUser(stage);
+                var isAdmin = Objects.nonNull(stage)
+                        ? CONTEXT_USER.isAdmin()
+                        : Boolean.FALSE;
+
+                createUserButton.setVisible(isAdmin);
+            }
+        });
     }
-
 }
-
