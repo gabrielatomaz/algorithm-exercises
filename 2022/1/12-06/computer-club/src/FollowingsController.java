@@ -32,7 +32,7 @@ public class FollowingsController extends StageContext implements Initializable 
 
     @FXML
     private void unfollow(ActionEvent event) {
-        var userToUnfollowSelected = followings.getSelectionModel().getSelectedItem();
+        var userToUnfollowSelected = this.followings.getSelectionModel().getSelectedItem();
         Long userIdToUnfollow = Long.parseLong(StringUtils.getFirstItemByDashDelimiter(userToUnfollowSelected));
 
         var users = FileUtils.getAllUsersFromFile();
@@ -63,7 +63,7 @@ public class FollowingsController extends StageContext implements Initializable 
                     FileUtils.updateUser(users);
 
                     this.followings.getItems().clear();
-                    
+
                     buildView();
 
                     AlertUtils.setAlert(AlertType.INFORMATION,
@@ -77,7 +77,6 @@ public class FollowingsController extends StageContext implements Initializable 
             AlertUtils.setAlert(AlertType.WARNING,
                     Constants.AlertConstants.UNFOLLOWED_USER_ERROR);
         }
-
     }
 
     @Override

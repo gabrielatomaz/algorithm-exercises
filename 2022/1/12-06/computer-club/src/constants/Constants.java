@@ -39,7 +39,10 @@ public final class Constants {
                 POSTS_NOT_FOUND = "Nenhuma postagem foi encontrada!",
                 
                 UNFOLLOWED_USER_SUCCESS = "Você deixou de seguir esse usuário com sucesso!",
-                UNFOLLOWED_USER_ERROR = "Não foi possível deixar de seguir esse usuário!";
+                UNFOLLOWED_USER_ERROR = "Não foi possível deixar de seguir esse usuário!",
+                
+                REMOVE_FOLLOWER_SUCCESS = "Seguidor removido com sucesso!",
+                REMOVE_FOLLOWER_ERROR = "Não foi possível remover seguidor!";
     }
 
     public static final class ViewConstants {
