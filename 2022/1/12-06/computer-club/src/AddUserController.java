@@ -1,9 +1,4 @@
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -18,13 +13,15 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
+import utils.AlertUtils;
+import utils.FileUtils;
+import utils.StringUtils;
 import utils.UserUtils;
 
 public class AddUserController extends StageContext implements Initializable {
@@ -69,7 +66,7 @@ public class AddUserController extends StageContext implements Initializable {
 
     @FXML
     private void createUser(ActionEvent event) throws IOException {
-        var interests = Arrays.asList(this.interests.getText().split(","));
+        var interests = StringUtils.splitByCommaDelimiter(this.interests.getText());
         if (hasEmptyField(this.name.getText(),
                 this.user.getText(),
                 this.password.getText(),
@@ -79,9 +76,7 @@ public class AddUserController extends StageContext implements Initializable {
                 this.telephone.getText(),
                 this.socialMedia.getText(),
                 this.studies.getText())) {
-            var alert = new Alert(AlertType.WARNING);
-            alert.setContentText("Campos de texto não devem estar em branco!");
-            alert.show();
+            AlertUtils.setAlert(AlertType.WARNING, Constants.AlertConstants.FIELDS_CANNOT_BE_EMPTY);
 
             return;
         }
@@ -102,33 +97,28 @@ public class AddUserController extends StageContext implements Initializable {
                 List.of(),
                 List.of(),
                 AvatarEnum.DEFAULT.getName(),
-                getNextId());
+                FileUtils.getNexUserId());
         try {
-            var alert = new Alert(AlertType.INFORMATION);
-            alert.setContentText("Usuário criado com sucesso!");
-            alert.show();
-            this.name.setText("");
-            this.user.setText("");
-            this.password.setText("");
-            this.email.setText("");
-            this.address.setText("");
-            this.cellPhone.setText("");
-            this.telephone.setText("");
-            this.socialMedia.setText("");
-            this.interests.setText("");
-            this.studies.setText("");
-            this.isAdmin.setSelected(Boolean.FALSE);
+            FileUtils.addUser(user);
 
-            var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, true);
-            var objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(user);
-            objectOutputStream.flush();
-            objectOutputStream.close();
+            emptyFields();
         } catch (Exception e) {
-            var alert = new Alert(AlertType.ERROR);
-            alert.setContentText("Erro ao criar usuário!");
-            alert.show();
+            System.out.println(e.getMessage());
         }
+    }
+
+    private void emptyFields() {
+        this.name.setText(StringUtils.EMPTY);
+        this.user.setText(StringUtils.EMPTY);
+        this.password.setText(StringUtils.EMPTY);
+        this.email.setText(StringUtils.EMPTY);
+        this.address.setText(StringUtils.EMPTY);
+        this.cellPhone.setText(StringUtils.EMPTY);
+        this.telephone.setText(StringUtils.EMPTY);
+        this.socialMedia.setText(StringUtils.EMPTY);
+        this.interests.setText(StringUtils.EMPTY);
+        this.studies.setText(StringUtils.EMPTY);
+        this.isAdmin.setSelected(Boolean.FALSE);
     }
 
     @FXML
@@ -140,35 +130,6 @@ public class AddUserController extends StageContext implements Initializable {
         return Arrays.stream(fields)
                 .filter(field -> field.isBlank() || field.isEmpty())
                 .count() > 0;
-    }
-
-    private Long getNextId() {
-        Long idCount = 1L;
-        try {
-            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
-            var objectIn = new ObjectInputStream(fileIn);
-            var keepReading = Boolean.TRUE;
-            try {
-                while (keepReading) {
-                    idCount += 1L;
-                    objectIn.readObject();
-                    objectIn = new ObjectInputStream(fileIn);
-                }
-                
-                objectIn.close();
-
-                return idCount;
-            } catch (EOFException e) {
-                keepReading = false;
-                objectIn.close();
-
-                return idCount;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return idCount;
     }
 
     @Override

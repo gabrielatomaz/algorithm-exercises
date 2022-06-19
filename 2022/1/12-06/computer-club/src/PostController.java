@@ -1,6 +1,4 @@
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -14,10 +12,12 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
+import utils.AlertUtils;
+import utils.FileUtils;
+import utils.StringUtils;
 import utils.UserUtils;
 
 public class PostController extends StageContext implements Initializable {
@@ -34,9 +34,7 @@ public class PostController extends StageContext implements Initializable {
     private void addPost(ActionEvent event) {
         var content = this.content.getText();
         if (content.isEmpty() || content.isBlank()) {
-            var alert = new Alert(AlertType.WARNING);
-            alert.setContentText("Conteúdo não pode ser vazio.");
-            alert.show();
+            AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.INVALID_CONTENT);
 
             return;
         }
@@ -47,20 +45,10 @@ public class PostController extends StageContext implements Initializable {
                 this.isVisible.isSelected());
 
         try {
-            var alert = new Alert(AlertType.INFORMATION);
-            alert.setContentText("Postagem criada com sucesso!");
-            alert.show();
-            this.content.setText("");
-
-            var fileOutputStream = new FileOutputStream(Constants.FilesConstants.POSTS_FILE, true);
-            var objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(post);
-            objectOutputStream.flush();
-            objectOutputStream.close();
+            FileUtils.addPost(post);
+            this.content.setText(StringUtils.EMPTY);
         } catch (Exception e) {
-            var alert = new Alert(AlertType.ERROR);
-            alert.setContentText("Erro ao criar postagem!");
-            alert.show();
+            System.out.println(e.getMessage());
         }
     }
 

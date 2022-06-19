@@ -1,24 +1,9 @@
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import constants.Constants;
 import context.StageContext;
 import entities.User;
-import enums.AvatarEnum;
 import enums.RouteEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import utils.FileUtils;
 
 public class LoginController extends StageContext implements Initializable {
 
@@ -53,36 +39,18 @@ public class LoginController extends StageContext implements Initializable {
         }
     }
 
-    private Boolean isUserFound() throws ClassNotFoundException, IOException {
-        try {
-            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
-            var objectIn = new ObjectInputStream(fileIn);
-            var keepReading = Boolean.TRUE;
-            try {
-                while (keepReading) {
-                    User user = (User) objectIn.readObject();
-                    if (this.user.getText().equalsIgnoreCase(user.getUser())
-                            && this.password.getText().equals(user.getPassword())) {
-                        objectIn.close();
+    private Boolean isUserFound() {
+        var users = FileUtils.getAllUsersFromFile();
 
-                        CONTEXT_USER = user;
+        for (User user : users) {
+            if (this.user.getText().equalsIgnoreCase(user.getUser())
+                    && this.password.getText().equals(user.getPassword())) {
+                CONTEXT_USER = user;
 
-                        return Boolean.TRUE;
-                    }
-
-                    objectIn = new ObjectInputStream(fileIn);
-                }
-
-                objectIn.close();
-            } catch (EOFException e) {
-                keepReading = false;
-                objectIn.close();
-
-                return Boolean.FALSE;
+                return Boolean.TRUE;
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
+
         return Boolean.FALSE;
     }
 
@@ -90,32 +58,24 @@ public class LoginController extends StageContext implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         // var user = new User(
-        //         "admin",
-        //         "admin",
-        //         "UFP31",
-        //         "admin",
-        //         "admin",
-        //         "admin",
-        //         "admin",
-        //         "admin",
-        //         List.of(),
-        //         "admin",
-        //         Boolean.TRUE,
-        //         List.of(),
-        //         List.of(),
-        //         List.of(),
-        //         AvatarEnum.DEFAULT.getName(),
-        //         1L);
+        // "admin",
+        // "admin",
+        // "UFP31",
+        // "admin",
+        // "admin",
+        // "admin",
+        // "admin",
+        // "admin",
+        // List.of(),
+        // "admin",
+        // Boolean.TRUE,
+        // List.of(),
+        // List.of(),
+        // List.of(),
+        // AvatarEnum.DEFAULT.getName(),
+        // 1L);
 
-        // try (var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, true)) {
-        //     var objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        //     objectOutputStream.writeObject(user);
-        //     objectOutputStream.flush();
-        //     objectOutputStream.close();
-        // } catch (IOException e) {
-        //     System.out.println(e.getMessage());
-        //     e.printStackTrace();
-        // }
+        //FileUtils.addUser(user);
 
     }
 }

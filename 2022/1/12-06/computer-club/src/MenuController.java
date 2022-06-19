@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import constants.Constants;
 import context.StageContext;
 import entities.User;
 import enums.RouteEnum;
@@ -10,10 +11,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import utils.AlertUtils;
+import utils.ButtonUtils;
 import utils.UserUtils;
 
 public class MenuController extends StageContext implements Initializable {
@@ -29,16 +31,15 @@ public class MenuController extends StageContext implements Initializable {
     @FXML
     void goTo(ActionEvent event) throws IOException {
         try {
-            var buttonText = getButton(event).getText();
+            var buttonText = ButtonUtils.getButtonText(event);
 
             var route = RouteEnum.findMenuRouteEnum(buttonText);
 
             if (RouteEnum.FEED.equals(route)) {
                 var followings = CONTEXT_USER.getFollowings();
+
                 if (Objects.isNull(followings) || followings.isEmpty()) {
-                    var alert = new Alert(AlertType.WARNING);
-                    alert.setContentText("Você não segue nenhum usuário!");
-                    alert.show();
+                    AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.FOLLOWINGS_NOT_FOUND);
 
                     return;
                 }
@@ -48,10 +49,6 @@ public class MenuController extends StageContext implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private Button getButton(ActionEvent event) {
-        return (Button) event.getSource();
     }
 
     @Override

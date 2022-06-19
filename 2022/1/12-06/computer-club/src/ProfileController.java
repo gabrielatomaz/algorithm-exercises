@@ -1,17 +1,10 @@
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,15 +13,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utils.AlertUtils;
+import utils.ButtonUtils;
+import utils.FileUtils;
+import utils.StringUtils;
 import utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 import constants.Constants;
 import context.StageContext;
 import entities.User;
@@ -85,25 +79,12 @@ public class ProfileController extends StageContext implements Initializable {
 
     @FXML
     private void updateUser(ActionEvent event) {
-        var users = findUsers();
+        var users = FileUtils.getAllUsersFromFile();
         var updatedUsers = new ArrayList<User>();
 
         users.forEach(user -> {
             if (user.getId().equals(CONTEXT_USER.getId())) {
-
-                user.setName(this.name.getText());
-                user.setUser(this.user.getText());
-                user.setEmail(this.email.getText());
-                user.setPassword(this.password.getText());
-                user.setAddress(this.address.getText());
-                user.setCellPhone(this.cellPhone.getText());
-                user.setTelephone(this.telephone.getText());
-                user.setSocialMedia(this.socialMedia.getText());
-                user.setStudies(this.studies.getText());
-                user.setAvatar(this.avatarOptions.getSelectionModel().getSelectedItem());
-
-                var interests = Arrays.asList(this.interests.getText().split(","));
-                user.setInterests(interests);
+                setUserFields(user);
 
                 CONTEXT_USER = user;
             }
@@ -111,28 +92,28 @@ public class ProfileController extends StageContext implements Initializable {
             updatedUsers.add(user);
         });
 
-        Boolean isFirst = Boolean.FALSE;
-        try {
-            for (User user : updatedUsers) {
-                var fileOutputStream = new FileOutputStream(Constants.FilesConstants.USERS_FILE, isFirst);
+        FileUtils.updateUser(updatedUsers);
+    }
 
-                var objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                objectOutputStream.writeObject(user);
-                objectOutputStream.flush();
-                objectOutputStream.close();
+    private void setUserFields(User user) {
+        user.setName(this.name.getText());
+        user.setUser(this.user.getText());
+        user.setEmail(this.email.getText());
+        user.setPassword(this.password.getText());
+        user.setAddress(this.address.getText());
+        user.setCellPhone(this.cellPhone.getText());
+        user.setTelephone(this.telephone.getText());
+        user.setSocialMedia(this.socialMedia.getText());
+        user.setStudies(this.studies.getText());
+        user.setAvatar(this.avatarOptions.getSelectionModel().getSelectedItem());
 
-                if (!isFirst)
-                    isFirst = Boolean.TRUE;
-            }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
+        var interests = StringUtils.splitByCommaDelimiter(this.interests.getText());
+        user.setInterests(interests);
     }
 
     private void goToWithValidations(ActionEvent event) throws IOException {
         try {
-            var buttonText = getButton(event).getText();
+            var buttonText = ButtonUtils.getButtonText(event);
             var route = RouteEnum.findProfileRouteEnum(buttonText);
 
             if (RouteEnum.FOLLOWERS.equals(route)
@@ -141,13 +122,11 @@ public class ProfileController extends StageContext implements Initializable {
                 var followings = CONTEXT_USER.getFollowings();
                 if (Objects.isNull(followers) || Objects.isNull(followings)
                         || followers.isEmpty() || followings.isEmpty()) {
-                    var contentText = RouteEnum.FOLLOWERS.equals(route)
-                            ? "Você não possui nenhum seguidor!"
-                            : "Você não segue nenhum usuário!";
+                    var content = RouteEnum.FOLLOWERS.equals(route)
+                            ? Constants.AlertConstants.FOLLOWERS_NOT_FOUND
+                            : Constants.AlertConstants.FOLLOWINGS_NOT_FOUND;
 
-                    var alert = new Alert(AlertType.WARNING);
-                    alert.setContentText(contentText);
-                    alert.show();
+                    AlertUtils.setAlert(AlertType.INFORMATION, content);
 
                     return;
                 }
@@ -157,10 +136,6 @@ public class ProfileController extends StageContext implements Initializable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private Button getButton(ActionEvent event) {
-        return (Button) event.getSource();
     }
 
     @Override
@@ -174,6 +149,10 @@ public class ProfileController extends StageContext implements Initializable {
                 var stage = getStage();
                 CONTEXT_USER = new UserUtils().getContextUser(stage);
 
+                updateViewFields();
+            }
+
+            private void updateViewFields() {
                 name.setText(CONTEXT_USER.getName());
                 email.setText(CONTEXT_USER.getEmail());
                 password.setText(CONTEXT_USER.getPassword());
@@ -183,8 +162,7 @@ public class ProfileController extends StageContext implements Initializable {
                 user.setText(CONTEXT_USER.getUser());
                 socialMedia.setText(CONTEXT_USER.getSocialMedia());
                 studies.setText(CONTEXT_USER.getStudies());
-                interests.setText(CONTEXT_USER.getInterests().stream().map(Object::toString)
-                        .collect(Collectors.joining(", ")));
+                interests.setText(StringUtils.joinWithCommaSpaceDelimiter(CONTEXT_USER.getInterests()));
 
                 avatarOptions.setPromptText(CONTEXT_USER.getAvatar());
 
@@ -213,34 +191,4 @@ public class ProfileController extends StageContext implements Initializable {
     private void logout(ActionEvent event) throws IOException {
         goTo(event, RouteEnum.LOGIN, null);
     }
-
-    private List<User> findUsers() {
-        var users = new ArrayList<User>();
-        try {
-            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
-            var objectIn = new ObjectInputStream(fileIn);
-            var keepReading = Boolean.TRUE;
-            try {
-                while (keepReading) {
-                    User user = (User) objectIn.readObject();
-
-                    users.add(user);
-
-                    objectIn = new ObjectInputStream(fileIn);
-                }
-
-                objectIn.close();
-            } catch (EOFException e) {
-                keepReading = false;
-                objectIn.close();
-
-                return users;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return users;
-    }
-
 }

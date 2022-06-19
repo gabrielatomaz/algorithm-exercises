@@ -1,11 +1,9 @@
-import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -18,11 +16,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import utils.AlertUtils;
+import utils.FileUtils;
+import utils.StringUtils;
 import utils.UserUtils;
 
 public class SearchController extends StageContext implements Initializable {
@@ -32,7 +32,7 @@ public class SearchController extends StageContext implements Initializable {
     @FXML
     private ListView<String> users;
 
-    private ArrayList<User> usersList = new ArrayList<>();
+    private List<User> usersList = new ArrayList<>();
 
     @FXML
     private ComboBox<String> searchOptions;
@@ -49,34 +49,17 @@ public class SearchController extends StageContext implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Arrays.stream(SearchOptionsEnum.values())
                 .forEach(option -> this.searchOptions.getItems().add(option.getName()));
-        try {
-            var fileIn = new FileInputStream(Constants.FilesConstants.USERS_FILE);
-            var objectIn = new ObjectInputStream(fileIn);
-            var keepReading = Boolean.TRUE;
-            try {
-                while (keepReading) {
-                    var user = (User) objectIn.readObject();
 
-                    usersList.add(user);
+        usersList = FileUtils.getAllUsersFromFile();
 
-                    var interests = user.getInterests().stream().map(Object::toString)
-                                    .collect(Collectors.joining(", "));
+        usersList.forEach(user -> {
+            var interests = StringUtils.joinWithCommaSpaceDelimiter(user.getInterests());
 
-                    var userView = MessageFormat.format("{0} - Nome: {1} \n Interesses: {2}", user.getId(), user.getName(), interests);
-                    this.users.getItems().add(userView);
+            var userView = MessageFormat.format(Constants.ViewConstants.USER_STRUCTURE,
+                    user.getId(), user.getName(), interests);
 
-                    objectIn = new ObjectInputStream(fileIn);
-                }
-
-                objectIn.close();
-            } catch (EOFException e) {
-                keepReading = false;
-                objectIn.close();
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
-        }
+            this.users.getItems().add(userView);
+        });
 
         Platform.runLater(new Runnable() {
             @Override
@@ -97,17 +80,17 @@ public class SearchController extends StageContext implements Initializable {
         var usersFound = this.usersList.stream()
                 .filter(searchOptionEnum.searchBy(searchBy))
                 .map(user -> {
-                    var interests = user.getInterests().stream().map(Object::toString)
-                                    .collect(Collectors.joining(", "));
+                    var interests = StringUtils.joinWithCommaSpaceDelimiter(user.getInterests());
 
-                    return MessageFormat.format("{0} - Nome: {1} \n Interesses: {2}", user.getId(), user.getName(), interests);
+                    var userView = MessageFormat.format(Constants.ViewConstants.USER_STRUCTURE,
+                            user.getId(), user.getName(), interests);
+
+                    return userView;
                 })
                 .collect(Collectors.toList());
 
         if (usersFound.isEmpty()) {
-            var alert = new Alert(AlertType.WARNING);
-            alert.setContentText("Nenhum usuário encontrado!");
-            alert.show();
+            AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.USERS_NOT_FOUND);
 
             return;
         }
@@ -121,10 +104,10 @@ public class SearchController extends StageContext implements Initializable {
     private void clearSearch(ActionEvent event) {
         this.users.getItems().clear();
         this.usersList.forEach(user -> {
-            var interests = user.getInterests().stream().map(Object::toString)
-                                    .collect(Collectors.joining(", "));
+            var interests = StringUtils.joinWithCommaSpaceDelimiter(user.getInterests());
 
-            var userView = MessageFormat.format("{0} - Nome: {1} \n Interesses: {2}", user.getId(), user.getName(), interests);
+            var userView = MessageFormat.format(Constants.ViewConstants.USER_STRUCTURE,
+                    user.getId(), user.getName(), interests);
 
             this.users.getItems().add(userView);
         });
@@ -133,7 +116,7 @@ public class SearchController extends StageContext implements Initializable {
     @FXML
     private void followUser(ActionEvent event) {
         var user = this.users.getSelectionModel().getSelectedItem();
-        var userId = user.split("-")[0].trim();
+        var userId = StringUtils.getFirstItemByDashDelimiter(user);
         System.out.println(userId);
     }
 }
