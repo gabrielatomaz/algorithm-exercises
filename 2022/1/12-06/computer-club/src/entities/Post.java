@@ -25,8 +25,8 @@ public class Post implements Serializable {
         return this.author;
     }
 
-    public void setAuthor(User autor) {
-        this.author = autor;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public LocalDate getTimestamp() {
