@@ -3,15 +3,15 @@ package enums;
 import java.util.Arrays;
 
 public enum RouteEnum {
-    FOLLOWERS("Seguidores", "layout-followers.fxml"),
-    FOLLOWINGS("Seguidos", "layout-followings.fxml"),
-    ADD_POST("Criar post", "layout-add-post.fxml"),
-    MENU("Voltar para o menu", "layout-menu.fxml"),
-    ADD_USER("Criar usuarios", "layout-add-user.fxml"),
-    PROFILE("Perfil", "layout-profile.fxml"),
-    FEED("Feed", "layout-feed.fxml"),
-    SEARCH("Busca", "layout-search.fxml"),
-    LOGIN("Login", "layout.fxml");
+    FOLLOWERS("Seguidores", "/controllers/followers/layout-followers.fxml"),
+    FOLLOWINGS("Seguidos", "/controllers/followings/layout-followings.fxml"),
+    ADD_POST("Criar post", "/controllers/post/layout-add-post.fxml"),
+    MENU("Voltar para o menu", "/controllers/menu/layout-menu.fxml"),
+    ADD_USER("Criar usuarios", "/controllers/add_user/layout-add-user.fxml"),
+    PROFILE("Perfil", "/controllers/profile/layout-profile.fxml"),
+    FEED("Feed", "/controllers/feed/layout-feed.fxml"),
+    SEARCH("Busca", "/controllers/search/layout-search.fxml"),
+    LOGIN("Login", "/controllers/login/layout.fxml");
 
     private static RouteEnum[] PROFILE_ROUTE_ENUM = {
             FOLLOWERS,
