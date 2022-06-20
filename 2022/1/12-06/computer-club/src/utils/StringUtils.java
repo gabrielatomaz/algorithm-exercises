@@ -2,6 +2,7 @@ package utils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import constants.Constants;
@@ -19,7 +20,10 @@ public class StringUtils {
     }
 
     public static List<String> splitByCommaDelimiter(String value) {
-        return Arrays.asList(value.split(DelimiterEnum.COMMA.getValue()));
+        var values = Arrays.stream(value.split(DelimiterEnum.COMMA.getValue()))
+                .map(v -> v.trim())
+                .collect(Collectors.toList());
+        return values;
     }
 
     public static String joinWithSemicolonDelimitter(List<?> list) {
