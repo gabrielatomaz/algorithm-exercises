@@ -175,7 +175,7 @@ public class FileUtils {
 
         return posts
                 .stream()
-                .filter(post -> id.equals(post.getAutor().getId()))
+                .filter(post -> id.equals(post.getAuthor().getId()))
                 .collect(Collectors.toList());
     }
 }

@@ -9,7 +9,7 @@ public class Post implements Serializable {
     private static final long serialVersionUID = 2L;
 
     private String content;
-    private User autor;
+    private User author;
     private LocalDate timestamp;
     private Boolean visibility;
 
@@ -21,12 +21,12 @@ public class Post implements Serializable {
         this.content = content;
     }
 
-    public User getAutor() {
-        return this.autor;
+    public User getAuthor() {
+        return this.author;
     }
 
-    public void setAutor(User autor) {
-        this.autor = autor;
+    public void setAuthor(User autor) {
+        this.author = autor;
     }
 
     public LocalDate getTimestamp() {
@@ -47,7 +47,7 @@ public class Post implements Serializable {
 
     public Post(String content, User autor, LocalDate timestamp, Boolean visibility) {
         this.content = content;
-        this.autor = autor;
+        this.author = autor;
         this.timestamp = timestamp;
         this.visibility = visibility;
     }
@@ -55,7 +55,7 @@ public class Post implements Serializable {
     @Override
     public String toString() {
         return MessageFormat.format("{0},{1},{2},{3}",
-                this.autor,
+                this.author,
                 this.timestamp,
                 this.content,
                 this.visibility);

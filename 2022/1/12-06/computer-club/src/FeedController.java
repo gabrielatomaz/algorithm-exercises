@@ -47,7 +47,7 @@ public class FeedController extends StageContext implements Initializable {
 
                         if (ObjectUtils.isListValid(userPosts)) {
                             for (Post post : userPosts) {
-                                var autor = post.getAutor();
+                                var autor = post.getAuthor();
                                 var postView = MessageFormat.format(Constants.ViewConstants.POST_STRUCTURE,
                                         autor.getName(), autor.getUser(), post.getTimestamp().toString(),
                                         post.getContent());
