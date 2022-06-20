@@ -45,9 +45,9 @@ public class Post implements Serializable {
         this.visibility = visibility;
     }
 
-    public Post(String content, User autor, LocalDate timestamp, Boolean visibility) {
+    public Post(String content, User author, LocalDate timestamp, Boolean visibility) {
         this.content = content;
-        this.author = autor;
+        this.author = author;
         this.timestamp = timestamp;
         this.visibility = visibility;
     }
