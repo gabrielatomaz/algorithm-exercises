@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import constants.Constants;
 import entities.*;
+import enums.FileEnum;
 import javafx.scene.control.Alert.AlertType;
 
 public class FileUtils {
@@ -50,7 +51,7 @@ public class FileUtils {
     }
 
     private static void addUser(User user, Boolean shouldAppend) throws IOException {
-        var fileOutputStream = new FileOutputStream(Constants.FileConstants.USERS_FILE, shouldAppend);
+        var fileOutputStream = new FileOutputStream(FileEnum.USERS.getPath(), shouldAppend);
         var objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(user);
         objectOutputStream.flush();
@@ -59,7 +60,7 @@ public class FileUtils {
 
     public static void addPost(Post post) {
         try {
-            var fileOutputStream = new FileOutputStream(Constants.FileConstants.POSTS_FILE, Boolean.TRUE);
+            var fileOutputStream = new FileOutputStream(FileEnum.POSTS.getPath(), Boolean.TRUE);
             var objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(post);
             objectOutputStream.flush();
@@ -74,7 +75,7 @@ public class FileUtils {
     public static Long getNexUserId() {
         Long idCount = 1L;
         try {
-            var fileIn = new FileInputStream(Constants.FileConstants.USERS_FILE);
+            var fileIn = new FileInputStream(FileEnum.USERS.getPath());
             var objectIn = new ObjectInputStream(fileIn);
             var keepReading = Boolean.TRUE;
             try {
@@ -104,7 +105,7 @@ public class FileUtils {
     public static List<User> getAllUsersFromFile() {
         var users = new ArrayList<User>();
         try {
-            var fileIn = new FileInputStream(Constants.FileConstants.USERS_FILE);
+            var fileIn = new FileInputStream(FileEnum.USERS.getPath());
             var objectIn = new ObjectInputStream(fileIn);
             var keepReading = Boolean.TRUE;
             try {
@@ -134,7 +135,7 @@ public class FileUtils {
     public static List<Post> getAllPostsFromFile() {
         var posts = new ArrayList<Post>();
         try {
-            var fileIn = new FileInputStream(Constants.FileConstants.POSTS_FILE);
+            var fileIn = new FileInputStream(FileEnum.POSTS.getPath());
             var objectIn = new ObjectInputStream(fileIn);
             var keepReading = Boolean.TRUE;
             try {

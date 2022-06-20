@@ -7,12 +7,7 @@ public final class Constants {
 
         public static int ZERO_VALUE = 0;
     }
-
-    public static final class FileConstants {
-        public static String USERS_FILE = "src/users.txt",
-                POSTS_FILE = "src/posts.txt";
-    }
-
+    
     public static final class AlertConstants {
         public static String UPDATED_USER_SUCCESS = "Usuário atualizado com sucesso!",
                 UPDATED_USER_ERROR = "Erro ao atualizar usuário!",
