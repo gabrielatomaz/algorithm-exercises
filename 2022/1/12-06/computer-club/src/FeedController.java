@@ -36,31 +36,35 @@ public class FeedController extends StageContext implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                var stage = getStage();
-                CONTEXT_USER = new UserUtils().getContextUser(stage);
+                try {
+                    var stage = getStage();
+                    CONTEXT_USER = new UserUtils().getContextUser(stage);
 
-                var followings = CONTEXT_USER.getFollowings();
+                    var followings = CONTEXT_USER.getFollowings();
 
-                if (ObjectUtils.isListValid(followings)) {
-                    for (User user : followings) {
-                        var userPosts = FileUtils.findPostUserById(user.getId());
+                    if (ObjectUtils.isListValid(followings)) {
+                        for (User user : followings) {
+                            var userPosts = FileUtils.findPostUserById(user.getId());
 
-                        if (ObjectUtils.isListValid(userPosts)) {
-                            for (Post post : userPosts) {
-                                var autor = post.getAuthor();
-                                var postView = MessageFormat.format(Constants.ViewConstants.POST_STRUCTURE,
-                                        autor.getName(), autor.getUser(), post.getTimestamp().toString(),
-                                        post.getContent());
+                            if (ObjectUtils.isListValid(userPosts)) {
+                                for (Post post : userPosts) {
+                                    var autor = post.getAuthor();
+                                    var postView = MessageFormat.format(Constants.ViewConstants.POST_STRUCTURE,
+                                            autor.getName(), autor.getUser(), post.getTimestamp().toString(),
+                                            post.getContent());
 
-                                if (post.isVisible())
-                                    posts.getItems().add(postView);
+                                    if (post.isVisible())
+                                        posts.getItems().add(postView);
+                                }
                             }
                         }
                     }
-                }
 
-                if (!ObjectUtils.isListValid(posts.getItems()))
+                    if (!ObjectUtils.isListValid(posts.getItems()))
+                        AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.POSTS_NOT_FOUND);
+                } catch (Exception e) {
                     AlertUtils.setAlert(AlertType.INFORMATION, Constants.AlertConstants.POSTS_NOT_FOUND);
+                }
             }
         });
     }

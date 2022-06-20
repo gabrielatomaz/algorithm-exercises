@@ -171,12 +171,21 @@ public class User implements Serializable {
         this.followers.add(follower);
     }
 
+    public void setFollowers(ArrayList<User> followers) {
+        this.followers = followers;
+    }
+
+
     public ArrayList<User> getFollowings() {
         return this.followings;
     }
 
     public void setFollowing(User following) {
         this.followings.add(following);
+    }
+
+    public void setFollowings(ArrayList<User> followings) {
+        this.followings = followings;
     }
 
     @Override

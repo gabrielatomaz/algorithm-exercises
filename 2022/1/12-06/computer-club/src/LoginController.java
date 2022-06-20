@@ -1,9 +1,12 @@
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import context.StageContext;
+import entities.Post;
 import entities.User;
+import enums.AvatarEnum;
 import enums.RouteEnum;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

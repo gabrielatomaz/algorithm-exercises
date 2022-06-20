@@ -105,6 +105,8 @@ public class ProfileController extends StageContext implements Initializable {
         user.setTelephone(this.telephone.getText());
         user.setSocialMedia(this.socialMedia.getText());
         user.setStudies(this.studies.getText());
+        user.setFollowers(CONTEXT_USER.getFollowers());
+        user.setFollowings(CONTEXT_USER.getFollowings());
 
         var avatarSelected = this.avatarOptions.getSelectionModel().getSelectedItem();
         var avatar = Objects.isNull(avatarSelected) || avatarSelected.isBlank() || avatarSelected.isEmpty()
@@ -123,15 +125,21 @@ public class ProfileController extends StageContext implements Initializable {
             var buttonText = ButtonUtils.getButtonText(event);
             var route = RouteEnum.findProfileRouteEnum(buttonText);
 
-            if (RouteEnum.FOLLOWERS.equals(route)
-                    || RouteEnum.FOLLOWINGS.equals(route)) {
+            if (RouteEnum.FOLLOWERS.equals(route)) {
                 var followers = CONTEXT_USER.getFollowers();
+                if (Objects.isNull(followers) || followers.isEmpty()) {
+                    var content = Constants.AlertConstants.FOLLOWERS_NOT_FOUND;
+
+                    AlertUtils.setAlert(AlertType.INFORMATION, content);
+
+                    return;
+                }
+            }
+
+            if (RouteEnum.FOLLOWINGS.equals(route)) {
                 var followings = CONTEXT_USER.getFollowings();
-                if (Objects.isNull(followers) || Objects.isNull(followings)
-                        || followers.isEmpty() || followings.isEmpty()) {
-                    var content = RouteEnum.FOLLOWERS.equals(route)
-                            ? Constants.AlertConstants.FOLLOWERS_NOT_FOUND
-                            : Constants.AlertConstants.FOLLOWINGS_NOT_FOUND;
+                if (Objects.isNull(followings) || followings.isEmpty()) {
+                    var content = Constants.AlertConstants.FOLLOWINGS_NOT_FOUND;
 
                     AlertUtils.setAlert(AlertType.INFORMATION, content);
 
