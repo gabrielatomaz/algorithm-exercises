@@ -7,7 +7,7 @@ public final class Constants {
 
         public static int ZERO_VALUE = 0;
     }
-    
+
     public static final class AlertConstants {
         public static String UPDATED_USER_SUCCESS = "Usuário atualizado com sucesso!",
                 UPDATED_USER_ERROR = "Erro ao atualizar usuário!",
@@ -30,6 +30,7 @@ public final class Constants {
                 YOU_CAN_NOT_FOLLOW_YOURSELF = "Você não pode se seguir",
                 FOLLOWED_USER_SUCCESS = "Usuário seguido com sucesso!",
                 FOLLOWED_USER_ERROR = "Não foi possível seguir esse usuário!",
+                ALREADY_FOLLOWED = "Você já segue esse usuário",
 
                 POSTS_NOT_FOUND = "Nenhuma postagem foi encontrada!",
                 

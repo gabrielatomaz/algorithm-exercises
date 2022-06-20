@@ -1,4 +1,5 @@
 package controllers.search;
+
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -118,7 +119,7 @@ public class SearchController extends StageContext implements Initializable {
     @FXML
     private void followUser(ActionEvent event) {
         var selectedUser = this.users.getSelectionModel().getSelectedItem();
-        var userId = Long.parseLong(StringUtils.getFirstItemByDashDelimiter(selectedUser));
+        Long userId = Long.parseLong(StringUtils.getFirstItemByDashDelimiter(selectedUser));
 
         if (CONTEXT_USER.getId().equals(userId)) {
             AlertUtils.setAlert(AlertType.INFORMATION,
@@ -127,9 +128,24 @@ public class SearchController extends StageContext implements Initializable {
             return;
         }
 
-        var userOptional = FileUtils.findUserById(userId);
+        var isUserAlreadyFollowed = CONTEXT_USER
+                .getFollowings()
+                .stream()
+                .anyMatch(following -> userId.equals(following.getId()));
+
+        if (isUserAlreadyFollowed) {
+            AlertUtils.setAlert(AlertType.INFORMATION,
+                    Constants.AlertConstants.ALREADY_FOLLOWED);
+
+            return;
+        }
 
         var users = FileUtils.getAllUsersFromFile();
+
+        var userOptional = users
+                .stream()
+                .filter(user -> userId.equals(user.getId()))
+                .findFirst();
 
         var contextUserOptional = users
                 .stream()
@@ -141,9 +157,12 @@ public class SearchController extends StageContext implements Initializable {
             var contextUser = contextUserOptional.get();
 
             users.remove(contextUser);
+            users.remove(user);
 
             contextUser.setFollowing(user);
+            user.setFollower(contextUser);
 
+            users.add(user);
             users.add(contextUser);
 
             CONTEXT_USER = contextUser;
