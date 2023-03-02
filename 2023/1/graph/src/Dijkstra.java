@@ -28,7 +28,7 @@ public class Dijkstra {
                     .stream();
 
             adjacentNodesEntriesStream
-                    .filter(entry -> settledNodesContainsNode(settledNodes, entry.getKey()))
+                    .filter(entry -> settledNodesNotContainsNode(settledNodes, entry.getKey()))
                     .forEach(entry -> {
                         var node = entry.getKey();
                         var distance = entry.getValue();
@@ -42,7 +42,7 @@ public class Dijkstra {
         }
     }
 
-    private boolean settledNodesContainsNode(HashSet<Node> settledNodes,
+    private boolean settledNodesNotContainsNode(HashSet<Node> settledNodes,
             Node node) {
         return !settledNodes.contains(node);
     }
