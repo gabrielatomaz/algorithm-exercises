@@ -31,9 +31,9 @@ public class Dijkstra {
                     .filter(entry -> settledNodesContainsNode(settledNodes, entry.getKey()))
                     .forEach(entry -> {
                         var node = entry.getKey();
-                        var distnce = entry.getValue();
+                        var distance = entry.getValue();
 
-                        evaluateDistanceAndPath(node, distnce, currentNode);
+                        evaluateDistanceAndPath(node, distance, currentNode);
 
                         unsettledNodes.add(entry.getKey());
                     });
@@ -55,8 +55,9 @@ public class Dijkstra {
         if (newDistance < adjacentNode.getDistance()) {
             adjacentNode.setDistance(newDistance);
 
-            adjacentNode.setShortestPath(Stream.concat(sourceNode.getShortestPath().stream(), Stream.of(sourceNode))
-                    .collect(Collectors.toList()));
+            var shortestPath = Stream.concat(sourceNode.getShortestPath().stream(), Stream.of(sourceNode))
+                    .collect(Collectors.toList());
+            adjacentNode.setShortestPath(shortestPath);
         }
     }
 
