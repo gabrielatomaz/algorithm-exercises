@@ -60,7 +60,7 @@ public class Dijkstra {
         }
     }
 
-    public void printPaths(List<Node> nodes) {
+    public void printShortestPaths(List<Node> nodes) {
         nodes.forEach(node -> {
             var path = node
                     .getShortestPath()
@@ -79,6 +79,19 @@ public class Dijkstra {
                     : nextPathsPrintMessage;
 
             System.out.println(printMessage);
+        });
+    }
+
+    public void printPaths(List<Node> nodes) {
+        nodes.forEach(node -> {
+            var adjacentNode = node
+                    .getAdjacentNodes()
+                    .entrySet()
+                    .stream()
+                    .map(entry -> format("{0} ({1})", entry.getKey().getName(), entry.getValue()))
+                    .collect(Collectors.joining(ARROW));
+
+            System.out.println(format("{0} -> {1}", node.getName(), adjacentNode));
         });
     }
 }

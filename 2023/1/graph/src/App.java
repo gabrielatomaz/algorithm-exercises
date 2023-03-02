@@ -70,6 +70,7 @@ public class App {
 
         System.out.println("Qual o nome do vértice de início?");
         var firstNodeName = scanner.next();
+        System.out.println("\n");
 
         var firstNode = nodes
                 .stream()
@@ -80,6 +81,8 @@ public class App {
         var dijkstra = new Dijkstra();
         dijkstra.calculateShortestPath(firstNode);
         dijkstra.printPaths(nodes);
+        System.out.println("\n");
+        dijkstra.printShortestPaths(nodes);
 
         scanner.close();
     }
