@@ -4,46 +4,83 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
+
     public static void main(String[] args) {
         var scanner = new Scanner(System.in);
-        var edges = new ArrayList<Edge>();
 
-        for (int i = 1; i <= 20; i++) {
-            System.out.println(format("Vértice {0}\n", i));
+        var totalNodes = 0;
+        var invalidTotalNodesSizeCondition = true;
+        while (invalidTotalNodesSizeCondition) {
+            System.out.println("Quantos vértices você quer inserir?");
+            totalNodes = scanner.nextInt();
 
-            System.out.println("Insira a origem do vértice: ");
-            var source = scanner.nextInt();
-
-            System.out.println("Insira o destino do vértice: ");
-            var destination = scanner.nextInt();
-
-            System.out.println("Insira o peso do vértice: ");
-            var weigth = scanner.nextInt();
-
-            if (weigth < 0 || source < 0) {
-                System.out.println("Por favor, insira um valor válido.");
-                i--;
-                continue;
-            }
-
-            var edge = new Edge(source, destination, weigth);
-            edges.add(edge);
-
-            if (i < 20) {
-                System.out.println("Gostaria de adicionar mais um vértice?\n"
-                        + "1 - Sim\n"
-                        + "2 - Não");
-                var loop = scanner.nextInt();
-
-                if (loop == 2)
-                    break;
+            invalidTotalNodesSizeCondition = totalNodes <= 0 || totalNodes >= 20;
+            
+            if (invalidTotalNodesSizeCondition) {
+                System.out.println("Tamanho inválido. Insira um valor positivo menor ou igual a 20.");
             }
         }
 
-        scanner.close();
+        var nodes = new ArrayList<Node>();
+        for (var i = 0; i < totalNodes; i++) {
+            System.out.println("Insira o nome do seu vértice:");
+            var nodeName = scanner.next();
 
-        var graph = new Graph(edges);
-        graph.populateNodes();
-        graph.print();
+            nodes.add(new Node(nodeName));
+        }
+
+        for (var node : nodes) {
+            var totalAdjacentsNodes = -1;
+            var invalidTotalAdjacentNodesSizeCondition = true;
+            while (invalidTotalAdjacentNodesSizeCondition) {
+                invalidTotalAdjacentNodesSizeCondition = totalAdjacentsNodes >= totalNodes
+                && totalAdjacentsNodes >= 0;
+                if (totalAdjacentsNodes >= totalNodes) {
+                    System.out.println(
+                            "O número de vértices adjacentes não pode ser negativo e maior do que o número de vértices total."
+                                    + " Por favor, insira um valor válido.");
+                }
+
+                var printMessage = format("Quantos vértices adjacentes você gostaria de adicionar ao vértice {0}",
+                        node.getName());
+                System.out.println(printMessage);
+                totalAdjacentsNodes = scanner.nextInt();
+            }
+
+            for (int i = 0; i < totalAdjacentsNodes; i++) {
+                System.out.println("Qual o nome do adjacente vértice que você gostaria de adicionar?");
+                var nodeName = scanner.next();
+                var adjacentNodeOptional = nodes
+                        .stream()
+                        .filter(adjacentNode -> nodeName.equalsIgnoreCase(adjacentNode.getName()))
+                        .findFirst();
+
+                if (adjacentNodeOptional.isPresent()) {
+                    var adjacentNode = adjacentNodeOptional.get();
+
+                    System.out.println("Qual a distância do vértice?");
+                    var distance = scanner.nextInt();
+
+                    node.addAdjacentNode(adjacentNode, distance);
+                } else {
+                    System.out.println("Nenhum vértice foi encontrado com esse nome.");
+                }
+            }
+        }
+
+        System.out.println("Qual o nome do vértice de início?");
+        var firstNodeName = scanner.next();
+
+        var firstNode = nodes
+                .stream()
+                .filter(node -> firstNodeName.equalsIgnoreCase(node.getName()))
+                .findFirst()
+                .get();
+                
+        var dijkstra = new Dijkstra();
+        dijkstra.calculateShortestPath(firstNode);
+        dijkstra.printPaths(nodes);
+
+        scanner.close();
     }
 }

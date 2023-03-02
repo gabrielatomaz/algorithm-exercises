@@ -1,26 +1,58 @@
-public class Node {
-    private int value,
-        weigth;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-    public Node(int value, int weigth) {
-        this.value = value;
-        this.weigth = weigth;
+public class Node implements Comparable<Node> {
+
+    private final String name;
+    private Integer distance;
+    private List<Node> shortestPath;
+    private Map<Node, Integer> adjacentNodes;
+
+    public Node(String name) {
+        this.name = name;
+
+        distance = Integer.MAX_VALUE;
+        
+        shortestPath = new LinkedList<>();
+        adjacentNodes = new HashMap<>();
     }
 
-    public int getValue() {
-        return this.value;
+    public String getName() {
+        return name;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public Integer getDistance() {
+        return distance;
     }
 
-    public int getWeigth() {
-        return this.weigth;
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 
-    public void setWeigth(int weigth) {
-        this.weigth = weigth;
+    public List<Node> getShortestPath() {
+        return shortestPath;
     }
 
+    public void setShortestPath(List<Node> shortestPath) {
+        this.shortestPath = shortestPath;
+    }
+
+    public Map<Node, Integer> getAdjacentNodes() {
+        return adjacentNodes;
+    }
+
+    public void setAdjacentNodes(Map<Node, Integer> adjacentNodes) {
+        this.adjacentNodes = adjacentNodes;
+    }
+
+    public void addAdjacentNode(Node node, int distance) {
+        adjacentNodes.put(node, distance);
+    }
+
+    @Override
+    public int compareTo(Node node) {
+        return Integer.compare(this.distance, node.getDistance());
+    }
 }
