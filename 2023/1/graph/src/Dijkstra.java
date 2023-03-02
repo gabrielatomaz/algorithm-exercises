@@ -15,10 +15,10 @@ public class Dijkstra {
     public void calculateShortestPath(Node source) {
         source.setDistance(0);
 
-        var sourceSingleton = Collections.singleton(source);
+        var sourceNodeSet = Collections.singleton(source);
 
         var settledNodes = new HashSet<Node>();
-        var unsettledNodes = new PriorityQueue<Node>(sourceSingleton);
+        var unsettledNodes = new PriorityQueue<Node>(sourceNodeSet);
 
         while (!unsettledNodes.isEmpty()) {
             var currentNode = unsettledNodes.poll();
