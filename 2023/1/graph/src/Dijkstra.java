@@ -17,41 +17,40 @@ public class Dijkstra {
 
         var sourceNodeSet = Collections.singleton(source);
 
-        var settledNodes = new HashSet<Node>();
-        var unsettledNodes = new PriorityQueue<Node>(sourceNodeSet);
+        var closedNodes = new HashSet<Node>();
+        var openNodes = new PriorityQueue<Node>(sourceNodeSet);
 
-        while (!unsettledNodes.isEmpty()) {
-            var currentNode = unsettledNodes.poll();
+        while (!openNodes.isEmpty()) {
+            var currentNode = openNodes.poll();
             var adjacentNodesEntriesStream = currentNode
                     .getAdjacentNodes()
                     .entrySet()
                     .stream();
 
             adjacentNodesEntriesStream
-                    .filter(entry -> settledNodesNotContainsNode(settledNodes, entry.getKey()))
+                    .filter(entry -> closedNodesNotContainsNode(closedNodes, entry.getKey()))
                     .forEach(entry -> {
                         var node = entry.getKey();
                         var distance = entry.getValue();
 
                         evaluateDistanceAndPath(node, distance, currentNode);
 
-                        unsettledNodes.add(entry.getKey());
+                        openNodes.add(entry.getKey());
                     });
 
-            settledNodes.add(currentNode);
+            closedNodes.add(currentNode);
         }
     }
 
-    private boolean settledNodesNotContainsNode(HashSet<Node> settledNodes,
+    private boolean closedNodesNotContainsNode(HashSet<Node> closedNodes,
             Node node) {
-        return !settledNodes.contains(node);
+        return !closedNodes.contains(node);
     }
 
     private void evaluateDistanceAndPath(Node adjacentNode,
             Integer disance,
             Node sourceNode) {
         var newDistance = sourceNode.getDistance() + disance;
-
         if (newDistance < adjacentNode.getDistance()) {
             adjacentNode.setDistance(newDistance);
 
