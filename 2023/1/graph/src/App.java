@@ -15,7 +15,7 @@ public class App {
             totalNodes = scanner.nextInt();
 
             invalidTotalNodesSizeCondition = totalNodes <= 0 || totalNodes >= 20;
-            
+
             if (invalidTotalNodesSizeCondition) {
                 System.out.println("Tamanho inválido. Insira um valor positivo menor ou igual a 20.");
             }
@@ -34,7 +34,7 @@ public class App {
             var invalidTotalAdjacentNodesSizeCondition = true;
             while (invalidTotalAdjacentNodesSizeCondition) {
                 invalidTotalAdjacentNodesSizeCondition = totalAdjacentsNodes >= totalNodes
-                && totalAdjacentsNodes >= 0;
+                        && totalAdjacentsNodes >= 0;
                 if (totalAdjacentsNodes >= totalNodes) {
                     System.out.println(
                             "O número de vértices adjacentes não pode ser negativo e maior do que o número de vértices total."
@@ -68,21 +68,27 @@ public class App {
             }
         }
 
-        System.out.println("Qual o nome do vértice de início?");
-        var firstNodeName = scanner.next();
+        var graph = new Graph(nodes);
+        graph.printAdjacentNodesAsList();
         System.out.println("\n");
 
-        var firstNode = nodes
-                .stream()
-                .filter(node -> firstNodeName.equalsIgnoreCase(node.getName()))
-                .findFirst()
-                .get();
-                
-        var dijkstra = new Dijkstra();
-        dijkstra.calculateShortestPath(firstNode);
-        dijkstra.printPaths(nodes);
+        System.out.println("Você gostaria de calcular o menor caminho entre os vértices do grafo?\n"
+                + "Digite 1 para SIM e 2 para NÃO.");
+        var calculateDijkstra = scanner.nextInt();
         System.out.println("\n");
-        dijkstra.printShortestPaths(nodes);
+
+        if (calculateDijkstra == 1) {
+            System.out.println("Qual o nome do vértice de início?");
+            var firstNodeName = scanner.next();
+            System.out.println("\n");
+
+            var firstNode = graph.findNodeByName(firstNodeName);
+
+            var dijkstra = new Dijkstra();
+            dijkstra.calculateShortestPath(firstNode);
+
+            graph.printShortestPaths();
+        }
 
         scanner.close();
     }
