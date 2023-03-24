@@ -1,7 +1,8 @@
-import static java.text.MessageFormat.format;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static java.text.MessageFormat.format;
 
 public class App {
 
@@ -69,25 +70,32 @@ public class App {
         }
 
         var graph = new Graph(nodes);
+
+        System.out.println("\n");
         graph.printAdjacentNodesAsList();
         System.out.println("\n");
 
         System.out.println("Você gostaria de calcular o menor caminho entre os vértices do grafo?\n"
                 + "Digite 1 para SIM e 2 para NÃO.");
         var calculateDijkstra = scanner.nextInt();
-        System.out.println("\n");
 
         if (calculateDijkstra == 1) {
             System.out.println("Qual o nome do vértice de início?");
             var firstNodeName = scanner.next();
+
             System.out.println("\n");
+            graph.generateShortestPath(firstNodeName);
+            System.out.println("\n");
+        }
 
-            var firstNode = graph.findNodeByName(firstNodeName);
-
-            var dijkstra = new Dijkstra();
-            dijkstra.calculateShortestPath(firstNode);
-
-            graph.printShortestPaths();
+        System.out.println("Você gostaria de gerar a árvore geradora mínima desse grafo através do algoritmo de Kruskal?\n"
+                + "Digite 1 para SIM e 2 para NÃO.");
+        var calculateKruskal = scanner.nextInt();
+        
+        if (calculateKruskal == 1) {
+            System.out.println("\n");
+            graph.generateMiniumSpanningTree();
+            System.out.println("\n");
         }
 
         scanner.close();

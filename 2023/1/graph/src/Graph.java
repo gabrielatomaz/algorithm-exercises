@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import static java.text.MessageFormat.format;
 
+import java.text.MessageFormat;
+
 public class Graph {
 
     private static final String ARROW = " -> ";
@@ -27,7 +29,12 @@ public class Graph {
         });
     }
 
-    public void printShortestPaths() {
+    public void generateShortestPath(String firstNodeName) {
+        var firstNode = findNodeByName(firstNodeName);
+
+        var dijkstra = new Dijkstra();
+        dijkstra.calculateShortestPath(firstNode);
+
         this.nodes.forEach(node -> {
             var path = node
                     .getShortestPath()
@@ -36,9 +43,9 @@ public class Graph {
                     .map(Objects::toString)
                     .collect(Collectors.joining(ARROW));
 
-            var firstPathPrintMessage = format("{0} : {1}",
+            var firstPathPrintMessage = format("{0} ({1})",
                     node.getName(), node.getDistance());
-            var nextPathsPrintMessage = format("{0} -> {1} : {2}",
+            var nextPathsPrintMessage = format("{0} -> {1} ({2})",
                     path, node.getName(), node.getDistance());
 
             var printMessage = path.isBlank()
@@ -47,6 +54,20 @@ public class Graph {
 
             System.out.println(printMessage);
         });
+    }
+
+    public void generateMiniumSpanningTree() {
+        var kruskal = new Kruskal(nodes);
+
+        var miniumSpanningTree = kruskal.applyKruskal();
+
+        var minimum = miniumSpanningTree
+                .stream()
+                .map(Edge::getWeight)
+                .reduce(0, Integer::sum);
+
+        miniumSpanningTree.forEach(System.out::println);
+        System.out.println(MessageFormat.format("Peso mínimo: {0}", minimum));
     }
 
     public Node findNodeByName(String name) {
