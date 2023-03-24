@@ -35,20 +35,20 @@ public class Kruskal {
     private List<Edge> convertNodesToGraph(List<Node> nodes) {
         var edges = new ArrayList<Edge>();
 
-        for (var node : nodes) {
+        nodes.forEach(node -> {
             var adjacentNodes = node
                     .getAdjacentNodes()
                     .entrySet()
                     .stream()
                     .collect(Collectors.toList());
-
-            for (var adjacentNode : adjacentNodes) {
+                    
+            adjacentNodes.forEach(adjacentNode -> {
                 var edge = new Edge(node,
                         adjacentNode.getKey(),
                         adjacentNode.getValue());
                 edges.add(edge);
-            }
-        }
+            });
+        });
 
         return edges;
     }
