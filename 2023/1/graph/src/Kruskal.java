@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
@@ -9,27 +8,25 @@ import java.util.stream.Stream;
 public class Kruskal {
 
     private final int numberOfNodes;
-    private final List<Node> nodes;
-    private final PriorityQueue<Edge> graph;
+    private final PriorityQueue<Edge> edges;
 
     public Kruskal(List<Node> nodes) {
-        this.nodes = nodes;
-        var graph = convertNodesToGraph(nodes);
-        this.graph = new PriorityQueue<>(graph);
+        var edges = convertNodesToGraph(nodes);
+        this.edges = new PriorityQueue<>(edges);
         numberOfNodes = nodes.size();
     }
 
     public List<Edge> applyKruskal() {
-        var spanningTree = new ArrayList<Edge>();
+        var miniumSpanningTree = new ArrayList<Edge>();
         do {
-            var edge = graph.poll();
-            var tree = Stream.concat(spanningTree.stream(), Stream.of(edge))
+            var edge = edges.poll();
+            var tree = Stream.concat(miniumSpanningTree.stream(), Stream.of(edge))
                     .collect(Collectors.toList());
             resetTree(tree);
-            spanningTree.add(edge);
-        } while (spanningTree.size() < numberOfNodes - 1);
+            miniumSpanningTree.add(edge);
+        } while (miniumSpanningTree.size() < numberOfNodes - 1);
 
-        return spanningTree;
+        return miniumSpanningTree;
     }
 
     private List<Edge> convertNodesToGraph(List<Node> nodes) {
@@ -54,11 +51,6 @@ public class Kruskal {
     }
 
     private void resetTree(List<Edge> spanningTree) {
-        nodes.forEach(node -> {
-            node.setVisited(false);
-            node.setAdjacentNodes(new HashMap<>());
-        });
-
         spanningTree.forEach(edge -> {
             if (Objects.nonNull(edge)) {
                 edge.getSource().addAdjacentNode(edge.getDestination(), edge.getWeight());
