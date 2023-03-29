@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.PriorityQueue;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -9,27 +10,33 @@ public class Kruskal {
 
     private final int numberOfNodes;
     private final PriorityQueue<Edge> edges;
+    private final List<Node> nodes;
 
     public Kruskal(List<Node> nodes) {
-        var edges = convertNodesToGraph(nodes);
+        this.nodes = nodes;
+        var edges = convertNodesToEdges(nodes);
         this.edges = new PriorityQueue<>(edges);
         numberOfNodes = nodes.size();
     }
 
     public List<Edge> applyKruskal() {
-        var miniumSpanningTree = new ArrayList<Edge>();
+        var spanningTree = new ArrayList<Edge>();
+
         do {
             var edge = edges.poll();
-            var tree = Stream.concat(miniumSpanningTree.stream(), Stream.of(edge))
-                    .collect(Collectors.toList());
-            resetTree(tree);
-            miniumSpanningTree.add(edge);
-        } while (miniumSpanningTree.size() < numberOfNodes - 1);
 
-        return miniumSpanningTree;
+            resetTree(Stream.concat(spanningTree.stream(), Stream.of(edge))
+                    .collect(Collectors.toList()));
+
+            if (!hasCycle()) {
+                spanningTree.add(edge);
+            }
+        } while (spanningTree.size() < numberOfNodes - 1);
+
+        return spanningTree;
     }
 
-    private List<Edge> convertNodesToGraph(List<Node> nodes) {
+    private List<Edge> convertNodesToEdges(List<Node> nodes) {
         var edges = new ArrayList<Edge>();
 
         nodes.forEach(node -> {
@@ -38,11 +45,12 @@ public class Kruskal {
                     .entrySet()
                     .stream()
                     .collect(Collectors.toList());
-                    
+
             adjacentNodes.forEach(adjacentNode -> {
                 var edge = new Edge(node,
                         adjacentNode.getKey(),
                         adjacentNode.getValue());
+                        
                 edges.add(edge);
             });
         });
@@ -51,11 +59,44 @@ public class Kruskal {
     }
 
     private void resetTree(List<Edge> spanningTree) {
-        spanningTree.forEach(edge -> {
-            if (Objects.nonNull(edge)) {
-                edge.getSource().addAdjacentNode(edge.getDestination(), edge.getWeight());
-                edge.getDestination().addAdjacentNode(edge.getSource(), edge.getWeight());
-            }
+        nodes.forEach(node -> {
+            node.setVisited(false);
+            node.setAdjacentNodes(new HashMap<>());
         });
+
+        spanningTree.forEach(edge -> {
+            edge.getSource().addAdjacentNode(edge.getDestination());
+            edge.getDestination().addAdjacentNode(edge.getSource());
+        });
+    }
+
+    public boolean hasCycle() {
+        for (var node : nodes) {
+            if (!node.isVisited() && hasCycle(null, node)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    private boolean hasCycle(Node caller, Node current) {
+        current.setVisited(true);
+
+        var adjacentNodes = current
+                .getAdjacentNodes()
+                .entrySet()
+                .stream()
+                .map(Entry::getKey)
+                .collect(Collectors.toList());
+
+        for (var adjacentNode : adjacentNodes) {
+            if (adjacentNode.isVisited() && !adjacentNode.equals(caller)
+                    || !adjacentNode.isVisited() && hasCycle(current, adjacentNode)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

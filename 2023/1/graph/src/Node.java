@@ -9,6 +9,7 @@ public class Node implements Comparable<Node> {
     private Integer distance;
     private List<Node> shortestPath;
     private Map<Node, Integer> adjacentNodes;
+    private boolean visited;
 
     public Node(String name) {
         this.name = name;
@@ -49,6 +50,18 @@ public class Node implements Comparable<Node> {
 
     public void addAdjacentNode(Node node, int distance) {
         adjacentNodes.put(node, distance);
+    }
+
+    public void addAdjacentNode(Node node) {
+        adjacentNodes.put(node, null);
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 
     @Override
